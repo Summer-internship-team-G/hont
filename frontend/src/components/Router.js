@@ -25,7 +25,7 @@ export default () => (
         <Route path='/pushup/exercise' exact component={PushupExercise}/>
         <Route path='/squat/exercise' exact component={SquatExercise}/>
         <Route path='/Result' exact component={Result}/>
-        <Route path='/Statistics' exact component={Statistics}/>
+        <Route path='/statistics' exact component={Statistics}/>
         <Footer/>
     </Router>
 );
