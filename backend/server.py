@@ -150,34 +150,75 @@ app.config['MONGODB_SETTINGS'] = {
 
 db = MongoEngine()
 db.init_app(app)
-
-@app.route('/api/upload', methods=['POST'])
-def analyze_image():
-    # 이미지 파일 저장
+# ############################################################################
+#푸시업 분석 API
+@app.route('/api/analyzePushup', methods=['POST'])
+def analyze_pushup():
+   
     image_file = request.files['file']
-    # mode = request.files['type']
-    mode = 1
-    # filename = secure_filename(image_file.filename)
-    # filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'posture.png')
     image_file.save("posture.png")
-
-    # 이미지 읽어오기
-    # image = cv2.imread("./uploads/posture.png")
 
     mp_drawing = mp.solutions.drawing_utils
     mp_pose = mp.solutions.pose
-  
     pose = mp_pose.Pose(min_detection_confidence=0.5, static_image_mode=True)
-
-  
-    
-    # files =  "now.png"
     
     image = cv2.imread("posture.png")
-    print("--------------------------------------------------------")
-    print(image)
     results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    print(results)
+   
+   
+    for index in pose_list:
+        if results.pose_landmarks.landmark[index].visibility < 0.0001:
+            results.pose_landmarks.landmark[index].x = 0
+            results.pose_landmarks.landmark[index].y = 0
+            results.pose_landmarks.landmark[index].z = 0
+
+   
+    l_sh = results.pose_landmarks.landmark[11]
+    r_sh = results.pose_landmarks.landmark[12]
+    l_elbow = results.pose_landmarks.landmark[13]
+    r_elbow= results.pose_landmarks.landmark[14]
+    l_wrist = results.pose_landmarks.landmark[15]
+    r_wrist = results.pose_landmarks.landmark[16]
+    l_hip = results.pose_landmarks.landmark[23]
+    r_hip = results.pose_landmarks.landmark[24]
+    l_knee = results.pose_landmarks.landmark[25]
+    r_knee = results.pose_landmarks.landmark[26]
+    l_ankle = results.pose_landmarks.landmark[27]
+    r_ankle = results.pose_landmarks.landmark[28]
+    l_foot = results.pose_landmarks.landmark[31]
+    r_foot = results.pose_landmarks.landmark[32]
+    
+    global pushup_count
+    global pushup_guide
+    
+    pushup_guide = ""
+    
+    do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_ankle, r_ankle)
+    
+
+    annotated_image = image.copy()
+    mp_drawing.draw_landmarks(
+    annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+    cv2.imwrite('./uploads/annotated_image.png', annotated_image)
+    return jsonify({'count': pushup_count, "guide": pushup_guide})
+
+
+# ############################################################################
+#스쿼트 분석 API
+@app.route('/api/analyzeSquat', methods=['POST'])
+def analyze_squat():
+   
+    image_file = request.files['file']
+    image_file.save("posture.png")
+
+    mp_drawing = mp.solutions.drawing_utils
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose(min_detection_confidence=0.5, static_image_mode=True)
+    
+    image = cv2.imread("posture.png")
+  
+    results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+  
    
     for index in pose_list:
         if results.pose_landmarks.landmark[index].visibility < 0.0001:
@@ -203,35 +244,16 @@ def analyze_image():
     
     global squat_guide 
     global squat_count
-    global pushup_count
-    global pushup_guide
     
-    pushup_guide = ""
-    pushup_count = 0
     squat_guide = "" 
-    squat_count = 0 
+   
+    do_squat(l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot)
 
-
-    if mode == 1:
-       
-        do_squat(l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot)
- 
-        annotated_image = image.copy()
-        mp_drawing.draw_landmarks(
-        annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        cv2.imwrite('./uploads/annotated_image.png', annotated_image)
-        return jsonify({'count': squat_count, "guide": squat_guide})       
-    else:
-       
-        do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_ankle, r_ankle)
-        
-
-        annotated_image = image.copy()
-        mp_drawing.draw_landmarks(
-        annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        cv2.imwrite('./uploads/annotated_image.png', annotated_image)
-    return jsonify({'count': pushup_count, "guide": pushup_guide})
-
+    annotated_image = image.copy()
+    mp_drawing.draw_landmarks(
+    annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+    cv2.imwrite('./uploads/annotated_image.png', annotated_image)
+    return jsonify({'count': squat_count, "guide": squat_guide})       
 
 if __name__ == '__main__':
     # only used locally

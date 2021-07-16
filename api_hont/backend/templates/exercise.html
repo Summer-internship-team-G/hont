@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class = "card-wrapper">
+        
+        <div class = "card">
+            
+            <h1 class = "center"> Exercise </h1>
+            
+            <form name="exercise_form">
+
+                <label for="name">ID</label>
+                <input type="text" name="id" class="field">
+
+                <label for="name">Date</label>
+                <input type="text" name="exerDate" class="field">
+
+                <label for="name">Exercise Type</label>
+                <input type="text" name="exerType" class="field">
+
+                <label for="id">Exercise Number</label>
+                <input type="text" name="exerNum" class="field">
+
+                <label for="password">Exercise Time</label>
+                <input type="text" name="exerTime" class="field">
+
+                <input type="submit" value="종료하기" class="btn">
+
+            </form>
+        
+        </div>
+    
+    </div>
+    
+{% endblock %}
