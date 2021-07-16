@@ -1,4 +1,4 @@
-from flask import Flask, Response, request, jsonify, abort
+from flask import Flask, Response,render_template, request, jsonify, abort, session, redirect
 import json
 from bson import json_util
 from datetime import datetime
@@ -9,10 +9,34 @@ import cv2
 from flask_cors import cross_origin, CORS
 import base64
 #from PIL import Image
-from flask_mongoengine import MongoEngine
+from pymongo import MongoClient
 import mediapipe as mp
+from functools import wraps
 from werkzeug.utils import secure_filename
+from passlib.hash import pbkdf2_sha256
+import uuid
 
+DOMAIN ="172.20.0.2"
+PORT = 27017
+angle=-1
+app = Flask(__name__)
+app.secret_key = b"'`D\x96\xf3m\xeb\x01b\x11\xb5\x05\x14S\x96\xbd"
+CORS(app)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+# app.config['MONGODB_SETTINGS'] = {
+#     'host': os.environ['MONGODB_HOST'],
+#     'username': os.environ['MONGODB_USERNAME'],
+#     'password': os.environ['MONGODB_PASSWORD'],
+#     'db': 'webapp'
+# }
+client = MongoClient(
+        host = [ str(DOMAIN) + ":" + str(PORT) ],
+        serverSelectionTimeoutMS = 3000, # 3 second timeout
+        username = "admin",
+        password = "password",
+    )
+db = client.webapp
+# db.init_app(app)
 squat_guide = ""
 pushup_guide= ""
 squat_count = 0
@@ -137,47 +161,76 @@ def do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_an
     is_pushup(elbow_angle, body_angle)
 
 
-angle=-1
-app = Flask(__name__)
-CORS(app)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MONGODB_SETTINGS'] = {
-    'host': os.environ['MONGODB_HOST'],
-    'username': os.environ['MONGODB_USERNAME'],
-    'password': os.environ['MONGODB_PASSWORD'],
-    'db': 'webapp'
-}
 
-db = MongoEngine()
-db.init_app(app)
-
-@app.route('/api/upload', methods=['POST'])
-def analyze_image():
-    # 이미지 파일 저장
+# ############################################################################
+#푸시업 분석 API
+@app.route('/api/analyzePushup', methods=['POST'])
+def analyze_pushup():
+   
     image_file = request.files['file']
-    # mode = request.files['type']
-    mode = 1
-    # filename = secure_filename(image_file.filename)
-    # filepath = os.path.join(app.config['UPLOAD_FOLDER'], 'posture.png')
     image_file.save("posture.png")
-
-    # 이미지 읽어오기
-    # image = cv2.imread("./uploads/posture.png")
 
     mp_drawing = mp.solutions.drawing_utils
     mp_pose = mp.solutions.pose
-  
     pose = mp_pose.Pose(min_detection_confidence=0.5, static_image_mode=True)
-
-  
-    
-    # files =  "now.png"
     
     image = cv2.imread("posture.png")
-    print("--------------------------------------------------------")
-    print(image)
     results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-    print(results)
+   
+   
+    for index in pose_list:
+        if results.pose_landmarks.landmark[index].visibility < 0.0001:
+            results.pose_landmarks.landmark[index].x = 0
+            results.pose_landmarks.landmark[index].y = 0
+            results.pose_landmarks.landmark[index].z = 0
+
+   
+    l_sh = results.pose_landmarks.landmark[11]
+    r_sh = results.pose_landmarks.landmark[12]
+    l_elbow = results.pose_landmarks.landmark[13]
+    r_elbow= results.pose_landmarks.landmark[14]
+    l_wrist = results.pose_landmarks.landmark[15]
+    r_wrist = results.pose_landmarks.landmark[16]
+    l_hip = results.pose_landmarks.landmark[23]
+    r_hip = results.pose_landmarks.landmark[24]
+    l_knee = results.pose_landmarks.landmark[25]
+    r_knee = results.pose_landmarks.landmark[26]
+    l_ankle = results.pose_landmarks.landmark[27]
+    r_ankle = results.pose_landmarks.landmark[28]
+    l_foot = results.pose_landmarks.landmark[31]
+    r_foot = results.pose_landmarks.landmark[32]
+    
+    global pushup_count
+    global pushup_guide
+    
+    pushup_guide = ""
+    
+    do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_ankle, r_ankle)
+    
+
+    annotated_image = image.copy()
+    mp_drawing.draw_landmarks(
+    annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+    cv2.imwrite('./uploads/annotated_image.png', annotated_image)
+    return jsonify({'count': pushup_count, "guide": pushup_guide})
+
+
+# ############################################################################
+#스쿼트 분석 API
+@app.route('/api/analyzeSquat', methods=['POST'])
+def analyze_squat():
+   
+    image_file = request.files['file']
+    image_file.save("posture.png")
+
+    mp_drawing = mp.solutions.drawing_utils
+    mp_pose = mp.solutions.pose
+    pose = mp_pose.Pose(min_detection_confidence=0.5, static_image_mode=True)
+    
+    image = cv2.imread("posture.png")
+  
+    results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+  
    
     for index in pose_list:
         if results.pose_landmarks.landmark[index].visibility < 0.0001:
@@ -203,36 +256,81 @@ def analyze_image():
     
     global squat_guide 
     global squat_count
-    global pushup_count
-    global pushup_guide
     
-    pushup_guide = ""
-    pushup_count = 0
     squat_guide = "" 
-    squat_count = 0 
+   
+    do_squat(l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot)
+
+    annotated_image = image.copy()
+    mp_drawing.draw_landmarks(
+    annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+    cv2.imwrite('./uploads/annotated_image.png', annotated_image)
+    return jsonify({'count': squat_count, "guide": squat_guide})       
 
 
-    if mode == 1:
-       
-        do_squat(l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot)
- 
-        annotated_image = image.copy()
-        mp_drawing.draw_landmarks(
-        annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        cv2.imwrite('./uploads/annotated_image.png', annotated_image)
-        return jsonify({'count': squat_count, "guide": squat_guide})       
-    else:
-       
-        do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_ankle, r_ankle)
-        
+class User:
 
-        annotated_image = image.copy()
-        mp_drawing.draw_landmarks(
-        annotated_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-        cv2.imwrite('./uploads/annotated_image.png', annotated_image)
-    return jsonify({'count': pushup_count, "guide": pushup_guide})
+  def start_session(self, user):
+    del user['password']
+    session['logged_in'] = True
+    session['user'] = user
+    return jsonify(user), 200
+
+  def signup(self):
+    print(request.form)
+
+    # Create the user object
+    user = {
+      "_id": uuid.uuid4().hex,
+      "name": request.form.get('name'),
+      "id": request.form.get('id'),
+      "password": request.form.get('password')
+    }
+
+    # Encrypt the password
+    user['password'] = pbkdf2_sha256.encrypt(user['password'])
+
+    # Check for existing email address
+    if db.users.find_one({ "id": user['id'] }):
+      return jsonify({ "error": "ID already in use" }), 400
+
+    if db.users.insert_one(user):
+      return self.start_session(user)
+
+    return jsonify({ "error": "Signup failed" }), 400
+  
+  def signout(self):
+    session.clear()
+    return redirect('/')
+  
+  def login(self):
+
+    user = db.users.find_one({
+      "id": request.get('id')
+    })
+
+    if user and pbkdf2_sha256.verify(request.get('password'), user['password']):
+      return self.start_session(user)
+    
+    return jsonify({ "error": "Invalid login credentials" }), 401
 
 
+
+@app.route('/user/signup', methods=['POST'])
+def signup():
+  return User().signup()
+
+@app.route('/user/signout')
+def signout():
+  return User().signout()
+
+@app.route('/user/login', methods=['POST'])
+def login():
+  return User().login()
+
+@app.route('/home')
+def home():
+  return render_template('home.html')
 if __name__ == '__main__':
     # only used locally
     app.run(host='0.0.0.0', port=5000, debug=True)
