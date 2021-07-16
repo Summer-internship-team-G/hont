@@ -20,12 +20,6 @@ services:
         image: mongo
         container_name: mongo
         restart: unless-stopped
-        command: mongod --auth
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: "admin"
-            MONGO_INITDB_ROOT_PASSWORD: "password"
-            MONGO_INITDB_DATABASE: webapp
-            MONGODB_DATA_DIR: /data/db
         volumes:
             - mongodbdata:/data/db
         networks:
@@ -38,14 +32,10 @@ services:
         command: gunicorn -w 1 -b 0.0.0.0:5000 server:app --reload
         ports:
             - "5000:5000"
-        environment:
-            MONGODB_HOST: mongodb
-            MONGODB_USERNAME: "apiuser"
-            MONGODB_PASSWORD: "apipassword"
         volumes:
             - appdata:/var/www/
         links:
-            - mongodb:mongodb             
+            - mongodb:mongodb   
         depends_on: 
             - mongodb
         networks:
@@ -62,12 +52,10 @@ services:
             - api
         networks:
             - app-tier
-        restart: "on-failure"
-
+        restart: "on-failure"   
 networks:
     app-tier:
         driver: bridge
-        
 volumes:
     mongodbdata:
         driver: local
