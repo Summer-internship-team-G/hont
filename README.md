@@ -30,7 +30,7 @@ Message Broker: RabbitMQ
 
 Asynchronous distributed task queuer: Celery
 
-Deployment: Docker → 찾아보기
+Deployment: Docker
 
 API Documentation Tool: Swagger
 
