@@ -46,5 +46,7 @@ Code Editor: VSCode
 # 실행 방법    
 docker-compose up --build
 
+# 개발 기간    
+2021.06.28~현재
 
 
