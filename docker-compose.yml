@@ -44,6 +44,8 @@ services:
             MONGODB_PASSWORD: "apipassword"
         volumes:
             - appdata:/var/www/
+        links:
+            - mongodb:mongodb             
         depends_on: 
             - mongodb
         networks:
@@ -62,12 +64,9 @@ services:
             - app-tier
         restart: "on-failure"   
 networks:
-    frontend:
-        driver: bridge
-    backend:
-        driver: bridge
     app-tier:
         driver: bridge
+        
 volumes:
     mongodbdata:
         driver: local
