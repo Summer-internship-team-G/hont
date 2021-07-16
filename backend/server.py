@@ -277,14 +277,16 @@ class User:
     return jsonify(user), 200
 
   def signup(self):
-    print(request.form)
-
+    data = request.get_json()
+    r_name = data.get('name','')
+    r_id = data.get('id', '')
+    r_pass = data.get('password', '')
     # Create the user object
     user = {
       "_id": uuid.uuid4().hex,
-      "name": request.form.get('name'),
-      "id": request.form.get('id'),
-      "password": request.form.get('password')
+      "name": r_name,
+      "id": r_id,
+      "password": r_pass
     }
 
     # Encrypt the password
@@ -304,12 +306,16 @@ class User:
     return redirect('/')
   
   def login(self):
-
+    data = request.get_json()
+    r_id = data.get('id','')
+    r_pass = data.get('password', '')
     user = db.users.find_one({
-      "id": request.get('id')
+      "id": r_id
     })
-
-    if user and pbkdf2_sha256.verify(request.get('password'), user['password']):
+    print("------------")
+    print(r_id)
+    print(r_pass)
+    if user and pbkdf2_sha256.verify(r_pass, user['password']):
       return self.start_session(user)
     
     return jsonify({ "error": "Invalid login credentials" }), 401
