@@ -18,7 +18,7 @@ JavaScript Framework: React
 
 Web Server: Nginx
 
-WSGI Server: Gunicorn
+WSGI Server: gunicorn
 
 Web Application Framework: Flask
 
