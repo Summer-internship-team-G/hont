@@ -1,6 +1,6 @@
 # 2021 SiliconValley Intership Project
 
-# 프로젝트 이름   
+# 프로젝트 명  
 실시간 영상 기반의 자세 교정 웹 사이트
   
 # 팀원
