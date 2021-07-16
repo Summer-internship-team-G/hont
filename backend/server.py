@@ -1,4 +1,4 @@
-from flask import Flask, Response, request, jsonify, abort
+from flask import Flask, Response,render_template, request, jsonify, abort, session, redirect
 import json
 from bson import json_util
 from datetime import datetime
@@ -9,10 +9,34 @@ import cv2
 from flask_cors import cross_origin, CORS
 import base64
 #from PIL import Image
-from flask_mongoengine import MongoEngine
+from pymongo import MongoClient
 import mediapipe as mp
+from functools import wraps
 from werkzeug.utils import secure_filename
+from passlib.hash import pbkdf2_sha256
+import uuid
 
+DOMAIN ="172.20.0.2"
+PORT = 27017
+angle=-1
+app = Flask(__name__)
+app.secret_key = b"'`D\x96\xf3m\xeb\x01b\x11\xb5\x05\x14S\x96\xbd"
+CORS(app)
+app.config['UPLOAD_FOLDER'] = 'uploads'
+# app.config['MONGODB_SETTINGS'] = {
+#     'host': os.environ['MONGODB_HOST'],
+#     'username': os.environ['MONGODB_USERNAME'],
+#     'password': os.environ['MONGODB_PASSWORD'],
+#     'db': 'webapp'
+# }
+client = MongoClient(
+        host = [ str(DOMAIN) + ":" + str(PORT) ],
+        serverSelectionTimeoutMS = 3000, # 3 second timeout
+        username = "admin",
+        password = "password",
+    )
+db = client.webapp
+# db.init_app(app)
 squat_guide = ""
 pushup_guide= ""
 squat_count = 0
@@ -137,19 +161,7 @@ def do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_an
     is_pushup(elbow_angle, body_angle)
 
 
-angle=-1
-app = Flask(__name__)
-CORS(app)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MONGODB_SETTINGS'] = {
-    'host': os.environ['MONGODB_HOST'],
-    'username': os.environ['MONGODB_USERNAME'],
-    'password': os.environ['MONGODB_PASSWORD'],
-    'db': 'webapp'
-}
 
-db = MongoEngine()
-db.init_app(app)
 # ############################################################################
 #푸시업 분석 API
 @app.route('/api/analyzePushup', methods=['POST'])
@@ -255,6 +267,70 @@ def analyze_squat():
     cv2.imwrite('./uploads/annotated_image.png', annotated_image)
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
+
+class User:
+
+  def start_session(self, user):
+    del user['password']
+    session['logged_in'] = True
+    session['user'] = user
+    return jsonify(user), 200
+
+  def signup(self):
+    print(request.form)
+
+    # Create the user object
+    user = {
+      "_id": uuid.uuid4().hex,
+      "name": request.form.get('name'),
+      "id": request.form.get('id'),
+      "password": request.form.get('password')
+    }
+
+    # Encrypt the password
+    user['password'] = pbkdf2_sha256.encrypt(user['password'])
+
+    # Check for existing email address
+    if db.users.find_one({ "id": user['id'] }):
+      return jsonify({ "error": "ID already in use" }), 400
+
+    if db.users.insert_one(user):
+      return self.start_session(user)
+
+    return jsonify({ "error": "Signup failed" }), 400
+  
+  def signout(self):
+    session.clear()
+    return redirect('/')
+  
+  def login(self):
+
+    user = db.users.find_one({
+      "id": request.get('id')
+    })
+
+    if user and pbkdf2_sha256.verify(request.get('password'), user['password']):
+      return self.start_session(user)
+    
+    return jsonify({ "error": "Invalid login credentials" }), 401
+
+
+
+@app.route('/user/signup', methods=['POST'])
+def signup():
+  return User().signup()
+
+@app.route('/user/signout')
+def signout():
+  return User().signout()
+
+@app.route('/user/login', methods=['POST'])
+def login():
+  return User().login()
+
+@app.route('/home')
+def home():
+  return render_template('home.html')
 if __name__ == '__main__':
     # only used locally
     app.run(host='0.0.0.0', port=5000, debug=True)
