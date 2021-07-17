@@ -70,15 +70,15 @@ function Exercise({ num }) {
         today = today.toLocaleDateString();
         history.push({
             pathname: "/components/Result",
-            // state: { 
-            //     date: today,
-            //     time: 1, 
-            //     count: 2, 
-            // }
             state: { 
-                date: today, 
-                time: time, 
+                date: today,
+                time: 1, 
+                count: 2, 
             }
+            // state: { 
+            //     date: today, 
+            //     time: time, 
+            // }
         })
     }
 
