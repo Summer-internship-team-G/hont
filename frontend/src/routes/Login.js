@@ -18,30 +18,27 @@ const Login = () => {
         }
         
         const postData = async () => {
+            const postUrl = "http://localhost:5000/user/login";
             const postVal = {
                 id: account.id,
                 password: account.pw,
             }
             await axios.post(postUrl, postVal)
-            .then(function (response){
-                setSuccess(response.data.success);
-            })
-            .catch(function (error){
-                console.log(error);
-            })
+            .then((response) => {
+                if (response.data.error == "true") {
+                    console.log("로그인에 실패하였습니다.");
+                }
+                else {
+                    setSuccess(true);
+                    history.replace("/");
+                }
+            });
         }
 
         const handleLogin = (e) => {
             //새로고침 방지
             e.preventDefault();
             postData();
-            if (success) {
-                history.replace("/");
-            }
-            else{
-                alert("로그인에 실패하였습니다.");
-            }
-            
         }
 
         return {
@@ -52,7 +49,6 @@ const Login = () => {
         }
     }
 
-    const { postUrl } = "/api/?";
     const history = useHistory();
     const { account, success, handleAccount, handleLogin } = useGetData();
 
@@ -60,7 +56,7 @@ const Login = () => {
         <>
             <div className="contents1">
                 <form>
-                    <label for="id">아이디 </label>
+                    <label htmlFor="id">아이디 </label>
                     <input 
                         type="text" 
                         id="id" 
@@ -70,7 +66,7 @@ const Login = () => {
                         onChange={handleAccount}
                     />
                     <p/>
-                    <label for="password">비밀번호 </label>
+                    <label htmlFor="password">비밀번호 </label>
                     <input 
                         type="password"
                         id="pw"
