@@ -366,29 +366,27 @@ class Exercise:
         # 만약 일치하는 운동 기록 이미 있다면 squarNum/pushupNum, everTime을 preNum, preTime변수에 저장
         # db의 squarNum/pushNum, exerTime 갱신
         result = "false"
-        preNum, preTime = 0, 0
+        prePN, preSN, preTime = 0, 0, 0
+        if db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']}):
+            pre = db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']})
+            prePN = pre['pushupNum']
+            preSN = pre['squartNum']
+            preTime = pre['exerTime']
         if exercise['exerType'] == "1":
-            if db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']}):
-                pre = db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']})
-                preNum = pre['squartNum']
-                preTime = pre['exerTime']
             db.exercises.update_one(
                 {"id": exercise['id'], "exerDate": exercise['exerDate'] },
-                {"$set": {"squartNum": preNum + exercise['exerNum'], "exerTime": preTime + exercise['exerTime']}}, 
+                {"$set": {"squartNum": preSN + exercise['exerNum'], "pushupNum": prePN, "exerTime": preTime + exercise['exerTime']}}, 
                 upsert = True
             )
         else:
-            if db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']}):
-                pre = db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']})
-                preNum = pre['pushupNum']
-                preTime = pre['exerTime']
             db.exercises.update_one(
                 {"id": exercise['id'], "exerDate": exercise['exerDate'] },
-                {"$set": {"pushupNum": preNum + exercise['exerNum'], "exerTime": preTime + exercise['exerTime']}}, 
+                {"$set": {"squartNum": preSN, "pushupNum": prePN + exercise['exerNum'], "exerTime": preTime + exercise['exerTime']}}, 
                 upsert = True
             )
 
         return jsonify(exercise), 200
+
 
     def showExercises(self):
         user_info = request.get_json()
