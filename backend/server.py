@@ -29,12 +29,13 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 #     'password': os.environ['MONGODB_PASSWORD'],
 #     'db': 'webapp'
 # }
-client = MongoClient(
-        host = [ str(DOMAIN) + ":" + str(PORT) ],
-        serverSelectionTimeoutMS = 3000, # 3 second timeout
-        username = "admin",
-        password = "password",
-    )
+client = MongoClient('mongodb://admin:password@mongodb')
+# client = MongoClient(
+#         host = [ str(DOMAIN) + ":" + str(PORT) ],
+#         serverSelectionTimeoutMS = 3000, # 3 second timeout
+#         username = "admin",
+#         password = "password",
+#     )
 db = client.webapp
 # db.init_app(app)
 squat_guide = ""
