@@ -360,6 +360,16 @@ class User:
     
     return jsonify({ "error": "true" }), 401
 
+  def withdrawal(self):
+    data = request.get_json()
+    r_pass = data.get('password', '')
+    user = db.users.find_one({ "_id": session['_id'] })
+    if user and pbkdf2_sha256.verify(r_pass, user['password']):
+      db.users.delete_one({ "id": user['id'] })
+      db.exercises.delete_many({ "id": user['id'] })
+      return self.signout()
+    return jsonify({ "error": "Incorrect password" }), 402
+
 class Exercise:
 
     def updateExercise(self):
