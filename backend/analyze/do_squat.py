@@ -124,8 +124,8 @@ def exercising():
             #    continue
         
         do_squat(l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot)
-        print_count()
-        print_guide()
+        #print_count()
+        #print_guide()
         squat_guide=[0 for i in range(3)]
 
         #except Exception as e:
