@@ -294,6 +294,16 @@ def analyze_squat():
     cv2.imwrite('./uploads/annotated_image.png', annotated_image)
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
+# Decorators
+def login_required(f):
+  @wraps(f)
+  def wrap(*args, **kwargs):
+    if 'logged_in' in session:
+      return f(*args, **kwargs)
+    else:
+      return redirect('/')
+  
+  return wrap
 
 
 class User:
@@ -301,7 +311,8 @@ class User:
   def start_session(self, user):
     del user['password']
     session['logged_in'] = True
-    session['user'] = user
+    session['id'] = user['id']
+    session['_id'] = user['_id']
     return jsonify(user), 200
 
   def signup(self):
@@ -309,6 +320,7 @@ class User:
     r_name = data.get('name','')
     r_id = data.get('id', '')
     r_pass = data.get('password', '')
+
     # Create the user object
     user = {
       "_id": uuid.uuid4().hex,
