@@ -15,11 +15,25 @@ from functools import wraps
 from werkzeug.utils import secure_filename
 from passlib.hash import pbkdf2_sha256
 import uuid
+from flask_restplus import Resource, Api
+from celery import Celery
 
-DOMAIN ="172.20.0.2"
-PORT = 27017
+
+
+
+# DOMAIN ="172.20.0.2"
+# PORT = 27017
 angle=-1
 app = Flask(__name__)
+api = Api(app, version='1.0', title='API title',
+          description='A simple API',
+          )
+ns = api.namespace('custom', description='operations')
+
+
+app.config.SWAGGER_UI_DOC_EXPANSION = 'full'
+
+
 app.secret_key = b"'`D\x96\xf3m\xeb\x01b\x11\xb5\x05\x14S\x96\xbd"
 CORS(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -29,14 +43,22 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 #     'password': os.environ['MONGODB_PASSWORD'],
 #     'db': 'webapp'
 # }
-client = MongoClient('mongodb://admin:password@mongodb')
 # client = MongoClient(
 #         host = [ str(DOMAIN) + ":" + str(PORT) ],
 #         serverSelectionTimeoutMS = 3000, # 3 second timeout
 #         username = "admin",
 #         password = "password",
 #     )
+client = MongoClient('mongodb://admin:password@mongodb')
 db = client.webapp
+
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379'),
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379')
+
+
+celery = Celery('tasks', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
+
 # db.init_app(app)
 squat_guide = ""
 pushup_guide= ""
@@ -95,6 +117,7 @@ def is_squat(hip_angle,l_knee_hip,r_knee_hip,l_knee_foot,r_knee_foot):
             squat_guide += '무릎이 발끝선을 넘지 않게 해주세요'
 
 #스쿼트 - 올바른 스쿼트 자세 기준을 만든걸 던져줌
+@celery.task()
 def do_squat(shoulder_l, shoulder_r, hip_l, hip_r, knee_l, knee_r, foot_l, foot_r):
     global angle
 
@@ -125,6 +148,7 @@ def do_squat(shoulder_l, shoulder_r, hip_l, hip_r, knee_l, knee_r, foot_l, foot_
     is_squat(hip_angle,l_knee_hip,r_knee_hip,l_knee_foot,r_knee_foot)
 
 ##푸시업 한 기준
+
 def is_pushup(elbow_angle, body_angle):
     global action_status
     global pushup_count
@@ -151,6 +175,7 @@ def is_pushup(elbow_angle, body_angle):
             pushup_guide += '엉덩이를 올려서 몸이 일직선이 되도록 맞춰주세요'
 
 #푸시업 - 올바른 푸시업 자세 기준을 만든걸 던져줌
+@celery.task()
 def do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_ankle, r_ankle):
 
     l_elbow_angle = get_angle_v3(l_wrist, l_elbow, l_sh)
@@ -218,6 +243,7 @@ def analyze_pushup():
 
 # ############################################################################
 #스쿼트 분석 API
+
 @app.route('/api/analyzeSquat', methods=['POST'])
 def analyze_squat():
    
@@ -269,6 +295,7 @@ def analyze_squat():
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
 
+
 class User:
 
   def start_session(self, user):
@@ -300,7 +327,7 @@ class User:
     if db.users.insert_one(user):
       return self.start_session(user)
 
-    return jsonify({ "error": "Signup failed" }), 400
+    return jsonify({ "error": 1 }), 400
   
   def signout(self):
     session.clear()
@@ -319,9 +346,57 @@ class User:
     if user and pbkdf2_sha256.verify(r_pass, user['password']):
       return self.start_session(user)
     
-    return jsonify({ "error": "Invalid login credentials" }), 401
+    return jsonify({ "error": "true" }), 401
 
+class Exercise:
 
+    def updateExercise(self):
+        print(request.is_json)
+        exercise = request.get_json()
+
+        # exercise = {
+        #     "id": 
+        #     "exerDate": "2020-07-14"
+        #     "exerType": "1" or "2"
+        #     "exerNum": 정수
+        #     "exerTime": 정수 (초 단위)  
+        # }
+        
+        # db.exercises에 id, exerDate가 일치하는 운동 기록 검색
+        # 만약 일치하는 운동 기록 이미 있다면 squarNum/pushupNum, everTime을 preNum, preTime변수에 저장
+        # db의 squarNum/pushNum, exerTime 갱신
+        result = "false"
+        preNum, preTime = 0, 0
+        if exercise['exerType'] == "1":
+            if db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']}):
+                pre = db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']})
+                preNum = pre['squartNum']
+                preTime = pre['exerTime']
+            db.exercises.update_one(
+                {"id": exercise['id'], "exerDate": exercise['exerDate'] },
+                {"$set": {"squartNum": preNum + exercise['exerNum'], "exerTime": preTime + exercise['exerTime']}}, 
+                upsert = True
+            )
+        else:
+            if db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']}):
+                pre = db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']})
+                preNum = pre['pushupNum']
+                preTime = pre['exerTime']
+            db.exercises.update_one(
+                {"id": exercise['id'], "exerDate": exercise['exerDate'] },
+                {"$set": {"pushupNum": preNum + exercise['exerNum'], "exerTime": preTime + exercise['exerTime']}}, 
+                upsert = True
+            )
+
+        return jsonify(exercise), 200
+
+    def showExercises(self):
+        user_info = request.get_json()
+        
+        exercises = db.exercise.find_one({"id": user_info['id'], "exerDate": user_info['exerDate']})
+        if exercises:
+            return jsonify(exercises), 200
+        return jsonify({ "error": "No workout records" }), 402
 
 @app.route('/user/signup', methods=['POST'])
 def signup():
@@ -338,6 +413,19 @@ def login():
 @app.route('/home')
 def home():
   return render_template('home.html')
+
+@app.route('/exercise/')
+def exercise():
+  return render_template('exercise.html')
+
+@app.route('/recordex', methods=['POST'])
+def updateExercise():
+    return Exercise().updateExercise()
+
+
+@app.route('/exercise/statistics')
+def showExercises():
+    return Exercise().showExercises()
 if __name__ == '__main__':
     # only used locally
     app.run(host='0.0.0.0', port=5000, debug=True)
