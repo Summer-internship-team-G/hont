@@ -8,7 +8,6 @@ const Login = () => {
             id: "",
             pw: "",
         });
-        const [success, setSuccess] = useState(false);
 
         const handleAccount = (e) => {
             setAccount({
@@ -26,10 +25,9 @@ const Login = () => {
             await axios.post(postUrl, postVal)
             .then((response) => {
                 if (response.data.error == "true") {
-                    console.log("로그인에 실패하였습니다.");
+                    alert("로그인에 실패하였습니다.");
                 }
                 else {
-                    setSuccess(true);
                     history.replace("/");
                 }
             });
@@ -42,15 +40,13 @@ const Login = () => {
         }
 
         return {
-            account,
-            success,
             handleAccount,
             handleLogin,
         }
     }
 
     const history = useHistory();
-    const { account, success, handleAccount, handleLogin } = useGetData();
+    const {  handleAccount, handleLogin } = useGetData();
 
     return(
         <>
