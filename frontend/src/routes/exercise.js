@@ -10,37 +10,98 @@ import Webcam from "react-webcam";
 //  false   true  (운동stop)
 
 // function Dosquat({ num, id }) {
-function Exercise({ num }) {
+function Dosquat({ num }) {
     const useGetData = () => {
         const webcamRef = useRef(null);
         const [start, setStart] = useState(false);
         const [stop, setStop] = useState(false);
         const [time, setTime] = useState(-1);
         const [ImgSrc, setImgSrc] = useState(null);
-
+        const [guideLine, setGuideLine] = useState("");
+        const [count, setCount] = useState(0);
+        
         const clickStartBtn = (e) => {
             e.preventDefault();
             setStart(true);
         };
 
+        //1초마다 time 증가, frame 변경
         useEffect(() => {
             const countUp = setInterval(() => {
                 if(start){
                     setTime(parseInt(time) + 1);
                     const imageSrc = webcamRef.current.getScreenshot();
                     setImgSrc(imageSrc);
+                    // console.log(imageSrc);
                 }
             }, 1000);
             return () => clearInterval(countUp);
         }, [time, start]);
 
-        const postInfo = async () => {
+        //image를 Blob file로 변환
+        const dataURItoBlob = (dataURI) => {
+            if(dataURI != null){
+            let byteString = atob(dataURI.split(",")[1]);
+            let mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];        
+            let ab = new ArrayBuffer(byteString.length);
+            let ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+              ia[i] = byteString.charCodeAt(i);
+            }
+            
+            return new Blob([ab], { type: mimeString });}
+          };
+    
+        //Image를 file로 변환하여 post
+        useEffect(() => {
+            const info = new FormData();
+            //info.append('type', num);
+            const file = dataURItoBlob(ImgSrc);
+            info.append('file', file);
+            postData(info);
+        },[ImgSrc]);
+    
+        //file로 변환된 image를 post하고, 돌아오는 값으로 guideLine과 count setting
+        const postData = async (info) => {
+            //num == 1 : squat / num == 2 : pushup
+            let target = "";
+            num == 1 ? target = "analyzeSquat" : target = "analyzePushup";
+    
+            axios.post("http://localhost:5000/api/" + target, info).then((response) => {
+                if (response.data) {
+                    // console.log(response.data);
+                    // console.log(response.data.count);
+                    // console.log(response.data.guide);
+                
+                    setGuideLine(response.data.guide);
+                    setCount(count + response.data.count);
+                }
+                else {
+                    console.log('response 실패');
+                }
+            });
         }
 
+        //stop 버튼을 눌렀을 때 database에 저장하기 위한 post
+        const postInfo = async () => {
+            let today = new Date();
+            today = today.toLocaleDateString();
+            const postVal = {
+                // id: {id},
+                exerDate: today,
+                exerType: num,
+                exerNum: count,
+                exerTime: time,
+            }
+            await axios.post("http://localhost:5000/api/recordex", postVal);
+        }
+
+        //stop 버튼 핸들러
         const clickStopBtn = (e) => {
             e.preventDefault();
             setStop(true);
             setStart(false);
+            postInfo();
         }
 
         return {
@@ -51,12 +112,13 @@ function Exercise({ num }) {
             webcamRef,
             time,
             ImgSrc,
+            guideLine,
+            count,
         };
     };
     
-    const postUrl = "http://localhost:5000/api/upload";
     const history = useHistory();
-    const { start, stop, clickStartBtn, clickStopBtn, webcamRef, time, ImgSrc } = useGetData();
+    const { start, stop, clickStartBtn, clickStopBtn, webcamRef, time, guideLine, count } = useGetData();
     const videoConstraints = {
         width: 700,
         height: 500,
@@ -69,36 +131,19 @@ function Exercise({ num }) {
         let today = new Date();
         today = today.toLocaleDateString();
         history.push({
-            pathname: "/components/Result",
-            state: { 
-                date: today,
-                time: 1, 
-                count: 2, 
-            }
+            pathname: "/Result",
+            //testing data
             // state: { 
-            //     date: today, 
-            //     time: time, 
+            //     date: today,
+            //     time: 1, 
+            //     count: 2, 
             // }
+            state: { 
+                date: today, 
+                time: {time}, 
+                count: {count}, 
+            }
         })
-    }
-
-    useEffect(() => {
-        fetch(ImgSrc)
-        .then(res => res.blob())
-        .then(blob => {
-            const file = new File([blob], "img", {type: "image/jpeg"});
-            // console.log(file);
-            postData(file);
-        });
-    // },[ImgSrc, time]);
-    },[ImgSrc]);
-
-    const postData = async (file) => {
-        const postVal = { 
-            type: {num}, 
-            image: {file},
-        }
-        await axios.post(postUrl, postVal);
     }
 
     return start || stop ? (
@@ -113,13 +158,13 @@ function Exercise({ num }) {
                 <div className="lightYellow">
                     <div>
                         <p>
-                            가이드라인 : guideLine
+                            가이드라인 : {guideLine}
                         </p>
                         <p>
                             시간 : {time}
                         </p>
                         <p>
-                            횟수 : count
+                            횟수 : {count}
                         </p>
                     </div>
                 </div>
@@ -136,4 +181,4 @@ function Exercise({ num }) {
     );
 }
 
-export default Exercise;
+export default Dosquat;
