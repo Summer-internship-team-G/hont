@@ -52,7 +52,12 @@ services:
             - api
         networks:
             - app-tier
-        restart: "on-failure"   
+        restart: "on-failure"  
+    redis:
+        image: redis:latest
+        container_name: redis
+        hostname: redis_dev
+        
 networks:
     app-tier:
         driver: bridge
