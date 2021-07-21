@@ -335,7 +335,7 @@ class User:
   
   def login(self):
     data = request.get_json()
-    r_id = data.get('id','')
+    r_id = data.get('id', '')
     r_pass = data.get('password', '')
     user = db.users.find_one({
       "id": r_id
@@ -397,14 +397,13 @@ class Exercise:
 
         return jsonify(exercise), 200
 
-
     def showExercises(self):
         user_info = request.get_json()
         
         exercises = db.exercise.find_one({"id": user_info['id'], "exerDate": user_info['exerDate']})
         if exercises:
             return jsonify(exercises), 200
-        return jsonify({ "error": "No workout records" }), 402
+        return jsonify({ "error": "true" }), 400 # 운동기록 없음
 
 # Decorators
 # def login_required(f):
