@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect
+from flask import Flask, render_template, session, redirect, jsonify
 from functools import wraps
 import pymongo
 
@@ -25,9 +25,14 @@ def login_required(f):
     if 'logged_in' in session:
       return f(*args, **kwargs)
     else:
-      return redirect('/')
+      return jsonify({ "error": "true" }), 400
   
   return wrap
+
+@app.route('/checkLogin')
+@login_required
+def LoggedIn():
+  return jsonify({ "error": "false" }), 200
 
 # Routes
 from user import routes
@@ -36,8 +41,8 @@ from user import routes
 def home():
   return render_template('home.html')
 
-@login_required
 @app.route('/dashboard/')
+@login_required
 def dashboard():
   return render_template('dashboard.html')
 
@@ -46,6 +51,8 @@ from exercise import routes
 @app.route('/exercise/')
 def exercise():
   return render_template('exercise.html')
+
+
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', port=5000, debug=True)

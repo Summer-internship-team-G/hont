@@ -1,8 +1,9 @@
+#개발용 compose file
 version: '3.7'
-# version: "2.4"
+
 
 services:
-
+#react container
     client:
         build:
             context: ./frontend
@@ -15,16 +16,24 @@ services:
             - /app/node_modules
         networks:
             - app-tier
-
+#mongodb container
     mongodb:
         image: mongo
         container_name: mongo
+        ports:
+            - "27017:27017"
         restart: unless-stopped
+        command: mongod --auth
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: "admin"
+            MONGO_INITDB_ROOT_PASSWORD: "password"
+            MONGO_INITDB_DATABASE: webapp
+            MONGODB_DATA_DIR: /data/db
         volumes:
             - mongodbdata:/data/db
         networks:
             - app-tier
-
+#flask container
     api:
         build: 
             context: ./backend
@@ -40,6 +49,7 @@ services:
             - mongodb
         networks:
             - app-tier
+#nginx container
     nginx:
         image: nginx:latest
         ports:
@@ -53,6 +63,7 @@ services:
         networks:
             - app-tier
         restart: "on-failure"  
+#redis container
     redis:
         image: redis:latest
         container_name: redis

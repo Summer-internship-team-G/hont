@@ -294,18 +294,6 @@ def analyze_squat():
     cv2.imwrite('./uploads/annotated_image.png', annotated_image)
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
-# Decorators
-def login_required(f):
-  @wraps(f)
-  def wrap(*args, **kwargs):
-    if 'logged_in' in session:
-      return f(*args, **kwargs)
-    else:
-      return redirect('/')
-  
-  return wrap
-
-
 class User:
 
   def start_session(self, user):
@@ -317,7 +305,7 @@ class User:
 
   def signup(self):
     data = request.get_json()
-    r_name = data.get('name','')
+    r_name = data.get('name', '')
     r_id = data.get('id', '')
     r_pass = data.get('password', '')
 
@@ -332,7 +320,7 @@ class User:
     # Encrypt the password
     user['password'] = pbkdf2_sha256.encrypt(user['password'])
 
-    # Check for existing email address
+    # Check for existing id
     if db.users.find_one({ "id": user['id'] }):
       return jsonify({ "error": "ID already in use" }), 400
 
@@ -347,7 +335,7 @@ class User:
   
   def login(self):
     data = request.get_json()
-    r_id = data.get('id','')
+    r_id = data.get('id', '')
     r_pass = data.get('password', '')
     user = db.users.find_one({
       "id": r_id
@@ -358,7 +346,7 @@ class User:
     if user and pbkdf2_sha256.verify(r_pass, user['password']):
       return self.start_session(user)
     
-    return jsonify({ "error": "true" }), 401
+    return jsonify({ "error": "true" }), 400
 
   def withdrawal(self):
     data = request.get_json()
@@ -368,7 +356,7 @@ class User:
       db.users.delete_one({ "id": user['id'] })
       db.exercises.delete_many({ "id": user['id'] })
       return self.signout()
-    return jsonify({ "error": "Incorrect password" }), 402
+    return jsonify({ "error": "true" }), 400 # 비번 오류
 
 class Exercise:
 
@@ -409,14 +397,42 @@ class Exercise:
 
         return jsonify(exercise), 200
 
-
     def showExercises(self):
         user_info = request.get_json()
         
         exercises = db.exercise.find_one({"id": user_info['id'], "exerDate": user_info['exerDate']})
         if exercises:
             return jsonify(exercises), 200
-        return jsonify({ "error": "No workout records" }), 402
+        return jsonify({ "error": "true" }), 400 # 운동기록 없음
+
+# Decorators
+# def login_required(f):
+#   @wraps(f)
+#   def wrap(*args, **kwargs):
+#     if 'logged_in' in session:
+#       return f(*args, **kwargs)
+#     else:
+#       return jsonify({ "error": "true" }), 400
+  
+#   return wrap
+
+def login_required(function_to_protect):
+  @wraps(function_to_protect)
+  def wrapper(*args, **kwargs):
+    user_id = session.get("_id")
+    if user_id:
+      if db.users.find_one({ "_id": user_id }): # db에 존재
+        return function_to_protect(*args, **kwargs)
+      else:
+        return jsonify({ "error": "true" }), 400 # db에 회원 정보 없음 -> user/signup
+    else:
+      return jsonify({ "error": "true" }), 400 # 로그인 되지 않음 -> user/login
+  return wrapper
+
+@app.route('/user/checkLogin')
+@login_required
+def LoggedIn():
+  return jsonify({ "error": "false" }), 200
 
 @app.route('/user/signup', methods=['POST'])
 def signup():
@@ -446,6 +462,26 @@ def updateExercise():
 @app.route('/exercise/statistics')
 def showExercises():
     return Exercise().showExercises()
+
+@ns.route('/<string:text>')
+@ns.response(200, 'Found')
+@ns.response(404, 'Not found')
+@ns.response(500, 'Internal Error')
+class Functions(Resource):
+    @api.doc('get')
+    def get(self, text):
+        return '', 404
+
+    @api.doc('delete')
+    def delete(self, id):
+        return '', 404
+
+    @api.doc('put')
+    def put(self, id):
+        return '', 404
+    @api.doc('post')
+    def post(self, id):
+        return '', 404
 if __name__ == '__main__':
     # only used locally
     app.run(host='0.0.0.0', port=5000, debug=True)
