@@ -294,27 +294,6 @@ def analyze_squat():
     cv2.imwrite('./uploads/annotated_image.png', annotated_image)
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
-# Decorators
-
-def login_required(function_to_protect):
-  @wraps(function_to_protect)
-  def wrapper(*args, **kwargs):
-    user_id = session.get("_id")
-    if user_id:
-      if db.users.find_one({ "_id": user_id }): # db에 존재
-        return function_to_protect(*args, **kwargs)
-      else:
-        return jsonify({ "error": "true" }), 400 # db에 회원 정보 없음 -> user/signup
-    else:
-      return jsonify({ "error": "true" }), 400 # 로그인 되지 않음 -> user/login
-  return wrapper
-
-@app.route('/user/checkLogin')
-@login_required
-def LoggedIn():
-  return jsonify({ "error": "false" }), 200
-
-
 class User:
 
   def start_session(self, user):
@@ -326,7 +305,7 @@ class User:
 
   def signup(self):
     data = request.get_json()
-    r_name = data.get('name','')
+    r_name = data.get('name', '')
     r_id = data.get('id', '')
     r_pass = data.get('password', '')
 
@@ -367,7 +346,7 @@ class User:
     if user and pbkdf2_sha256.verify(r_pass, user['password']):
       return self.start_session(user)
     
-    return jsonify({ "error": "true" }), 401
+    return jsonify({ "error": "true" }), 400
 
   def withdrawal(self):
     data = request.get_json()
@@ -377,7 +356,7 @@ class User:
       db.users.delete_one({ "id": user['id'] })
       db.exercises.delete_many({ "id": user['id'] })
       return self.signout()
-    return jsonify({ "error": "Incorrect password" }), 402
+    return jsonify({ "error": "true" }), 400 # 비번 오류
 
 class Exercise:
 
@@ -426,6 +405,35 @@ class Exercise:
         if exercises:
             return jsonify(exercises), 200
         return jsonify({ "error": "No workout records" }), 402
+
+# Decorators
+# def login_required(f):
+#   @wraps(f)
+#   def wrap(*args, **kwargs):
+#     if 'logged_in' in session:
+#       return f(*args, **kwargs)
+#     else:
+#       return jsonify({ "error": "true" }), 400
+  
+#   return wrap
+
+def login_required(function_to_protect):
+  @wraps(function_to_protect)
+  def wrapper(*args, **kwargs):
+    user_id = session.get("_id")
+    if user_id:
+      if db.users.find_one({ "_id": user_id }): # db에 존재
+        return function_to_protect(*args, **kwargs)
+      else:
+        return jsonify({ "error": "true" }), 400 # db에 회원 정보 없음 -> user/signup
+    else:
+      return jsonify({ "error": "true" }), 400 # 로그인 되지 않음 -> user/login
+  return wrapper
+
+@app.route('/user/checkLogin')
+@login_required
+def LoggedIn():
+  return jsonify({ "error": "false" }), 200
 
 @app.route('/user/signup', methods=['POST'])
 def signup():
