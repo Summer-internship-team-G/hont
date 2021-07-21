@@ -463,6 +463,25 @@ def updateExercise():
 def showExercises():
     return Exercise().showExercises()
 
+@ns.route('/<string:text>')
+@ns.response(200, 'Found')
+@ns.response(404, 'Not found')
+@ns.response(500, 'Internal Error')
+class Functions(Resource):
+    @api.doc('get')
+    def get(self, text):
+        return '', 404
+
+    @api.doc('delete')
+    def delete(self, id):
+        return '', 404
+
+    @api.doc('put')
+    def put(self, id):
+        return '', 404
+    @api.doc('post')
+    def post(self, id):
+        return '', 404
 if __name__ == '__main__':
     # only used locally
     app.run(host='0.0.0.0', port=5000, debug=True)
