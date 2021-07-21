@@ -309,7 +309,7 @@ def login_required(function_to_protect):
       return jsonify({ "error": "true" }), 400 # 로그인 되지 않음 -> user/login
   return wrapper
 
-@app.route('/checkLogin')
+@app.route('/user/checkLogin')
 @login_required
 def LoggedIn():
   return jsonify({ "error": "false" }), 200
@@ -341,7 +341,7 @@ class User:
     # Encrypt the password
     user['password'] = pbkdf2_sha256.encrypt(user['password'])
 
-    # Check for existing email address
+    # Check for existing id
     if db.users.find_one({ "id": user['id'] }):
       return jsonify({ "error": "ID already in use" }), 400
 
