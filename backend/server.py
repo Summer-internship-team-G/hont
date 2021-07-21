@@ -295,15 +295,24 @@ def analyze_squat():
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
 # Decorators
-def login_required(f):
-  @wraps(f)
-  def wrap(*args, **kwargs):
-    if 'logged_in' in session:
-      return f(*args, **kwargs)
+
+def login_required(function_to_protect):
+  @wraps(function_to_protect)
+  def wrapper(*args, **kwargs):
+    user_id = session.get("_id")
+    if user_id:
+      if db.users.find_one({ "_id": user_id }): # db에 존재
+        return function_to_protect(*args, **kwargs)
+      else:
+        return jsonify({ "error": "true" }), 400 # db에 회원 정보 없음 -> user/signup
     else:
-      return redirect('/')
-  
-  return wrap
+      return jsonify({ "error": "true" }), 400 # 로그인 되지 않음 -> user/login
+  return wrapper
+
+@app.route('/checkLogin')
+@login_required
+def LoggedIn():
+  return jsonify({ "error": "false" }), 200
 
 
 class User:
@@ -446,6 +455,7 @@ def updateExercise():
 @app.route('/exercise/statistics')
 def showExercises():
     return Exercise().showExercises()
+
 if __name__ == '__main__':
     # only used locally
     app.run(host='0.0.0.0', port=5000, debug=True)
