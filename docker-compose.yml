@@ -16,6 +16,66 @@ services:
             - /app/node_modules
         networks:
             - app-tier
+ #elastic search container
+
+    elasticsearch:
+        restart: always
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        environment:
+            - ES_JAVA_OPTS=-Xms2048m -Xmx2048m
+            - discovery.type=single-node
+        healthcheck:
+            test: "wget -q -O - http://localhost:9200/_cat/health"
+            interval: 1s
+            timeout: 30s
+            retries: 300
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            #- eladata:/var/www/
+            - ./elasticsearch/data:/usr/share/elasticsearch/data
+        networks:
+            - app-tier
+    
+    kibana:
+        restart: always
+        image: docker.elastic.co/kibana/kibana:6.8.14
+        expose:
+            - 5601
+        ports:
+            - 5601:5601
+        depends_on:
+            - elasticsearch
+        environment:
+            - SERVER_PORT=5601
+            - SERVER_NAME=kibana.example.org
+            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+        networks:
+            - app-tier
+
+    monstache:
+        restart: always
+        image: rwynn/monstache:rel5
+        command: -f ./monstache.config.toml &
+        volumes:
+            - ./config/monstache.config.toml:/monstache.config.toml
+        depends_on:
+            - elasticsearch
+            - mongodb
+            - mongo2
+            - mongo3
+        links:
+            - elasticsearch
+        ports:
+            - "8080:8080"
+        networks:
+            - app-tier
+            
 #mongodb container
     mongodb:
         image: mongo
@@ -23,7 +83,8 @@ services:
         ports:
             - "27017:27017"
         restart: unless-stopped
-        command: mongod --auth
+        command: mongod --replSet replication
+        #mongod --auth
         environment:
             MONGO_INITDB_ROOT_USERNAME: "admin"
             MONGO_INITDB_ROOT_PASSWORD: "password"
@@ -33,6 +94,35 @@ services:
             - mongodbdata:/data/db
         networks:
             - app-tier
+    mongo2:
+        image: mongo
+        ports:
+            - "27021:27017"
+        volumes:
+            - mongodbdata:/data/db
+        networks:
+            - app-tier
+        command: mongod --replSet replication
+        depends_on:
+            - mongodb
+    mongo3:
+        image: mongo
+        ports:
+            - "27022:27017"
+        volumes:
+            - mongodbdata:/data/db
+        networks:
+            - app-tier
+        command: mongod --replSet replication
+        depends_on:
+            - mongo2
+    mongosetup:
+        image: "setup-rspl"
+        depends_on:
+            - mongodb
+        networks:
+            - app-tier
+    
 #flask container
     api:
         build: 
@@ -77,3 +167,7 @@ volumes:
         driver: local
     appdata:
         driver: local
+    eladata:
+        driver: local
+        
+
