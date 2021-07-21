@@ -1,8 +1,9 @@
+#개발용 compose file
 version: '3.7'
-# version: "2.4"
+
 
 services:
-
+#react container
     client:
         build:
             context: ./frontend
@@ -15,7 +16,7 @@ services:
             - /app/node_modules
         networks:
             - app-tier
-
+#mongodb container
     mongodb:
         image: mongo
         container_name: mongo
@@ -32,7 +33,7 @@ services:
             - mongodbdata:/data/db
         networks:
             - app-tier
-
+#flask container
     api:
         build: 
             context: ./backend
@@ -48,6 +49,7 @@ services:
             - mongodb
         networks:
             - app-tier
+#nginx container
     nginx:
         image: nginx:latest
         ports:
@@ -61,6 +63,7 @@ services:
         networks:
             - app-tier
         restart: "on-failure"  
+#redis container
     redis:
         image: redis:latest
         container_name: redis
