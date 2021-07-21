@@ -1,60 +1,77 @@
+#배포 버전, for production
+
 version: '3.7'
 
 services:
-
+#react 컨테이너
     client:
         build:
             context: ./frontend
-            dockerfile: Dockerfile-prod
+            dockerfile: Dockerfile
+        tty: true
         ports:
-            - "3000:80"
+            - "3000:3000"
         volumes: 
             - ./frontend:/app
             - /app/node_modules
         networks:
-            - frontend
-
+            - app-tier
+#db 컨테이너
     mongodb:
         image: mongo
         container_name: mongo
+        ports:
+            - "27017:27017"
         restart: unless-stopped
         command: mongod --auth
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: "admin"
-            MONGO_INITDB_ROOT_PASSWORD: "password"
-            MONGO_INITDB_DATABASE: webapp
-            MONGODB_DATA_DIR: /data/db
+        env_file:
+            - ./settings/prod/.env.db
         volumes:
             - mongodbdata:/data/db
         networks:
-            - backend
-
+            - app-tier
+#flask 컨테이너
     api:
         build: 
             context: ./backend
             dockerfile: Dockerfile
-        command: gunicorn --bind 0.0.0.0:5000 app:app
-        expose:
-            - 5000
-        environment:
-            MONGODB_HOST: mongodb
-            MONGODB_USERNAME: "apiuser"
-            MONGODB_PASSWORD: "apipassword"
+        command: gunicorn -w 1 -b 0.0.0.0:5000 server:app --reload
+        ports:
+            - "5000:5000"
         volumes:
             - appdata:/var/www/
+        links:
+            - mongodb:mongodb   
         depends_on: 
             - mongodb
+        env_file:
+            - ./settings/prod/.env.prod
         networks:
-            - frontend
-            - backend
-
+            - app-tier
+#nginx 컨테이너
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+            - "8000:8000"
+        volumes:
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        depends_on:
+            - client
+            - api
+        networks:
+            - app-tier
+        restart: "on-failure"
+        
+#redis컨테이너     
+    redis:
+        image: redis:latest
+        container_name: redis
+        hostname: redis_dev
+        
 networks:
-    frontend:
-        driver: bridge
-    backend:
+    app-tier:
         driver: bridge
 volumes:
     mongodbdata:
-        driver: local
     appdata:
-        driver: local
