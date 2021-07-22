@@ -9,7 +9,6 @@ const Signup = () => {
             id: "",
             pw: "",
         });
-        const [success, setSuccess] = useState(false);
 
         const handleAccount = (e) => {
             setAccount({
@@ -19,21 +18,27 @@ const Signup = () => {
         }
         
         const postData = async () => {
-            const postUrl = "http://localhost:5000/user/signup";
+            const postUrl = "http://localhost:5000/auth/register";
             const postVal = {
                 name: account.name,
                 id: account.id,
                 password: account.pw,
             }
-            console.log(postVal);
-            await axios.post(postUrl, postVal)
-            .then((response) => {
-                if (response.data.error == "true") {
-                    console.log("회원가입에 실패하였습니다.");
+            await axios.post(postUrl, postVal, {
+                headers: {
+                    'Content-Type': 'application/json'
                 }
-                else {
-                    setSuccess(true);
+            })
+            .then((response) => {
+                if (response.data.status == "success") {
+                    // setSuccess(true);
+                    localStorage.clear();
+                    localStorage.setItem("token", response.data.auth_token);
+                    alert(response.data.message);
                     history.replace("/login");
+                }
+                else if (response.data.status == "fail"){
+                    alert(response.data.message);
                 }
             });
         }
@@ -44,15 +49,13 @@ const Signup = () => {
         }
 
         return {
-            account,
-            success,
             handleAccount,
             handleSignup,
         }
     }
 
     const history = useHistory();
-    const { account, success, handleAccount, handleSignup } = useGetData();
+    const { handleAccount, handleSignup } = useGetData();
 
     return(
         <div className="contents1">
