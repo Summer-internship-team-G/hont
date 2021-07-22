@@ -295,6 +295,7 @@ def analyze_squat():
     cv2.imwrite('./uploads/annotated_image.png', annotated_image)
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
+
 ######################## 로그인 ########################
 
 def encode_auth_token(user_id):
@@ -350,7 +351,9 @@ def remove_blacklist(auth_token):
 
 
 class User:
-    
+
+    user_idx = 1
+
     def register(self):
         # get the post data
         post_data = request.get_json()
@@ -362,21 +365,22 @@ class User:
         
         if not user:
             try:
-                r_pw = bcrypt.generate_password_hash(r_password)
+                r_pw = bcrypt.generate_password_hash(r_password).decode('utf-8')
                 user = {
-                    "_id": uuid.uuid4().int, # token에 넣을 user_id
+                    "user_idx": User.user_idx, # token에 넣을 user_idx
                     "name": r_name,
                     "id": r_id,
                     "password": r_pw
                 }
+                User.user_idx += 1
                 # insert the user
                 db.users.insert_one(user)
                 # generate the auth token
-                auth_token = encode_auth_token(user['_id'])
+                auth_token = encode_auth_token(user['user_idx'])
                 responseObject = {
                     'status': 'success',
                     'message': 'Successfully registered.',
-                    'auth_token': auth_token.decode('utf-8')
+                    'auth_token': auth_token
                 }
                 return make_response(jsonify(responseObject)), 201
             except Exception as e:
@@ -396,18 +400,18 @@ class User:
         # get the post data
         post_data = request.get_json()
         try:
+            r_id = post_data.get('id', '')
+            r_password = post_data.get('password', '')
             # fetch the user data
-            user = db.users.find_one({"id": post_data.get('id')})
-            if user and bcrypt.check_password_hash(
-                user['password'], post_data.get('password')
-            ).decode('utf-8'):
-                auth_token = User.encode_auth_token(user['_id'])
+            user = db.users.find_one({"id": r_id})
+            if user and bcrypt.check_password_hash(user['password'], r_password):
+                auth_token = User.encode_auth_token(user['user_idx'])
                 if auth_token:
                     remove_blacklist(auth_token) # 블랙리스트에서 삭제
                     responseObject = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
-                        'auth_token': auth_token.decode('utf-8')
+                        'auth_token': auth_token
                     }
                     return make_response(jsonify(responseObject)), 200
             else:
@@ -441,7 +445,7 @@ class User:
         if auth_token:
             resp = decode_auth_token(auth_token)
             if not isinstance(resp, str):
-                user = db.users.find_one({"_id": resp})
+                user = db.users.find_one({"user_idx": resp})
                 if user:
                     responseObject = {
                         'status': 'success',
@@ -473,7 +477,7 @@ class User:
         if auth_token:
             resp = decode_auth_token(auth_token)
             if not isinstance(resp, str):
-            # if db.users.find_one({"_id": resp}):
+            # if db.users.find_one({"user_idx": resp}):
                 # mark the token as blacklisted
                 try:
                     # insert the token
@@ -518,8 +522,6 @@ def checkAuth():
 @app.route('/auth/logout', methods=['POST'])
 def logout():
     return User().logout()
-
-#####################################################
 
 @app.route('/recordex', methods=['POST'])
 def updateExercise():
