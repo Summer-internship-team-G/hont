@@ -294,167 +294,231 @@ def analyze_squat():
     cv2.imwrite('./uploads/annotated_image.png', annotated_image)
     return jsonify({'count': squat_count, "guide": squat_guide})       
 
+######################## 로그인 ########################
+
+def encode_auth_token(user_id):
+    """
+    Generates the Auth Token
+    :return: string
+    """
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id
+        }
+        return jwt.encode(
+            payload,
+            app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
+
+
+def decode_auth_token(auth_token):
+    """
+    Validates the auth token
+    :param auth_token:
+    :return: integer|string
+    """
+    try:
+        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+        is_blacklisted_token = check_blacklist(auth_token)
+        if is_blacklisted_token:
+            return 'Token blacklisted. Please log in again.'
+        else:
+            return payload['sub']
+    except jwt.ExpiredSignatureError:
+        return 'Signature expired. Please log in again.'
+    except jwt.InvalidTokenError:
+        return 'Invalid token. Please log in again.'
+
+
+def check_blacklist(auth_token):
+    # check whether auth token has been blacklisted
+    res = db.blacklistTokens.find_one({"token" : str(auth_token)})
+    if res:
+        return True  
+    else:
+        return False
+
+def remove_blacklist(auth_token):
+    db.blacklistTokens.delete_many({"token": str(auth_token)})
+
 
 
 class User:
-
-  def start_session(self, user):
-    del user['password']
-    session['logged_in'] = True
-    # session['user'] = user
-    session['id'] = user['id']
-    session['_id'] = user['_id']
-    return jsonify(user), 200
-
-  def signup(self):
-    data = request.get_json()
-    r_name = data.get('name','')
-    r_id = data.get('id', '')
-    r_pass = data.get('password', '')
-    # Create the user object
-    user = {
-      "_id": uuid.uuid4().hex,
-      "name": r_name,
-      "id": r_id,
-      "password": r_pass
-    }
-
-    # Encrypt the password
-    user['password'] = pbkdf2_sha256.encrypt(user['password'])
-
-    # Check for existing email address
-    if db.users.find_one({ "id": user['id'] }):
-      return jsonify({ "error": "ID already in use" }), 400
-
-    if db.users.insert_one(user):
-      return self.start_session(user)
-
-    return jsonify({ "error": 1 }), 400
-  
-  def signout(self):
-    session.clear()
-    return redirect('/')
-  
-  def login(self):
-    data = request.get_json()
-    r_id = data.get('id','')
-    r_pass = data.get('password', '')
-    user = db.users.find_one({
-      "id": r_id
-    })
-    print("------------")
-    print(r_id)
-    print(r_pass)
-    if user and pbkdf2_sha256.verify(r_pass, user['password']):
-      return self.start_session(user)
     
-    return jsonify({ "error": "true" }), 401
-  
-  def withdrawal(self):
-    data = request.get_json()
-    r_pass = data.get('password', '')
-    user = db.users.find_one({ "_id": session['_id'] })
-    if user and pbkdf2_sha256.verify(r_pass, user['password']):
-      db.users.delete_one({ "id": user['id'] })
-      db.exercises.delete_many({ "id": user['id'] })
-      return self.signout()
-    return jsonify({ "error": "true" }), 402 # 비번 오류
-
-class Exercise:
-
-    def updateExercise(self):
-        print(request.is_json)
-        exercise = request.get_json()
-
-        # exercise = {
-        #     "id": 
-        #     "exerDate": "2020-07-14"
-        #     "exerType": "1" or "2"
-        #     "exerNum": 정수
-        #     "exerTime": 정수 (초 단위)  
-        # }
+    def register(self):
+        # get the post data
+        post_data = request.get_json()
+        # check if user already exists
+        r_id = post_data.get('id', '')
+        r_name = post_data.get('name', '')
+        r_password = post_data.get('password', '')
+        user = db.users.find_one({"id": r_id})
         
-        # db.exercises에 id, exerDate가 일치하는 운동 기록 검색
-        # 만약 일치하는 운동 기록 이미 있다면 squarNum/pushupNum, everTime을 preNum, preTime변수에 저장
-        # db의 squarNum/pushNum, exerTime 갱신
-        result = "false"
-        prePN, preSN, preTime = 0, 0, 0
-        if db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']}):
-            pre = db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']})
-            prePN = pre['pushupNum']
-            preSN = pre['squartNum']
-            preTime = pre['exerTime']
-        if exercise['exerType'] == "1":
-            db.exercises.update_one(
-                {"id": exercise['id'], "exerDate": exercise['exerDate'] },
-                {"$set": {"squartNum": preSN + exercise['exerNum'], "pushupNum": prePN, "exerTime": preTime + exercise['exerTime']}}, 
-                upsert = True
-            )
+        if not user:
+            try:
+                r_pw = bcrypt.generate_password_hash(r_password)
+                user = {
+                    "_id": uuid.uuid4().int, # token에 넣을 user_id
+                    "name": r_name,
+                    "id": r_id,
+                    "password": r_pw
+                }
+                # insert the user
+                db.users.insert_one(user)
+                # generate the auth token
+                auth_token = encode_auth_token(user['_id'])
+                responseObject = {
+                    'status': 'success',
+                    'message': 'Successfully registered.',
+                    'auth_token': auth_token.decode('utf-8')
+                }
+                return make_response(jsonify(responseObject)), 201
+            except Exception as e:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Some error occurred. Please try again.'
+                }
+                return make_response(jsonify(responseObject)), 401
         else:
-            db.exercises.update_one(
-                {"id": exercise['id'], "exerDate": exercise['exerDate'] },
-                {"$set": {"squartNum": preSN, "pushupNum": prePN + exercise['exerNum'], "exerTime": preTime + exercise['exerTime']}}, 
-                upsert = True
-            )
+            responseObject = {
+                'status': 'fail',
+                'message': 'User already exists. Please Log in.'
+            }
+            return make_response(jsonify(responseObject)), 202
 
-        return jsonify(exercise), 200
+    def login(self):
+        # get the post data
+        post_data = request.get_json()
+        try:
+            # fetch the user data
+            user = db.users.find_one({"id": post_data.get('id')})
+            if user and bcrypt.check_password_hash(
+                user['password'], post_data.get('password')
+            ).decode('utf-8'):
+                auth_token = User.encode_auth_token(user['_id'])
+                if auth_token:
+                    remove_blacklist(auth_token) # 블랙리스트에서 삭제
+                    responseObject = {
+                        'status': 'success',
+                        'message': 'Successfully logged in.',
+                        'auth_token': auth_token.decode('utf-8')
+                    }
+                    return make_response(jsonify(responseObject)), 200
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'User does not exist.'
+                }
+                return make_response(jsonify(responseObject)), 404
+        except Exception as e:
+            print(e)
+            responseObject = {
+                'status': 'fail',
+                'message': 'Try again'
+            }
+            return make_response(jsonify(responseObject)), 500
 
-    def showExercises(self):
-        user_info = request.get_json()
-        
-        exercises = db.exercise.find_one({"id": user_info['id'], "exerDate": user_info['exerDate']})
-        if exercises:
-            return jsonify(exercises), 200
-        return jsonify({ "error": "No workout records" }), 402
+    def checkAuth(self):
+        # get the auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                responseObject = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+                user = db.users.find_one({"_id": resp})
+                if user:
+                    responseObject = {
+                        'status': 'success',
+                        'data': {
+                            'name': user['name'],
+                            'id': user['id']
+                        }
+                    }
+                return make_response(jsonify(responseObject)), 200
+            responseObject = {
+                'status': 'fail',
+                'message': resp
+            }
+            return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 401
 
-@app.route('/user/signup', methods=['POST'])
-def signup():
-  return User().signup()
+    def logout(self):
+        # get auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            auth_token = auth_header.split(" ")[1]
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = decode_auth_token(auth_token)
+            if not isinstance(resp, str):
+            # if db.users.find_one({"_id": resp}):
+                # mark the token as blacklisted
+                try:
+                    # insert the token
+                    db.blacklistTokens.insert_one({"token": str(auth_token)})
+                    responseObject = {
+                        'status': 'success',
+                        'message': 'Successfully logged out.'
+                    }
+                    return make_response(jsonify(responseObject)), 200
+                except Exception as e:
+                    responseObject = {
+                        'status': 'fail',
+                        'message': e
+                    }
+                    return make_response(jsonify(responseObject)), 200
+            else:
+                responseObject = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return make_response(jsonify(responseObject)), 401
+        else:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(responseObject)), 403
 
-@app.route('/user/signout')
-def signout():
-  return User().signout()
 
-@app.route('/user/login', methods=['POST'])
+@app.route('/auth/register', methods=['POST'])
+def register():
+    return User().register()
+
+@app.route('/auth/register', methods=['POST'])
 def login():
-  return User().login()
+    return User().login()
 
-@app.route('/home')
-def home():
-  return render_template('home.html')
+@app.route('/auth/status')
+def checkAuth():
+    return User().checkAuth()
 
-@app.route('/exercise/')
-def exercise():
-  return render_template('exercise.html')
+@app.route('/auth/logout', methods=['POST'])
+def logout():
+    return User().logout()
 
-# Decorators
-# def login_required(f):
-#   @wraps(f)
-#   def wrap(*args, **kwargs):
-#     if 'logged_in' in session:
-#       return f(*args, **kwargs)
-#     else:
-#       return jsonify({ "error": "true" }), 400
-  
-#   return wrap
-
-def login_required(function_to_protect):
-  @wraps(function_to_protect)
-  def wrapper(*args, **kwargs):
-    user_id = session.get("_id")
-    if user_id:
-      if db.users.find_one({ "_id": user_id }): # db에 존재
-        return function_to_protect(*args, **kwargs)
-      else:
-        return jsonify({ "error": "true" }), 400 # db에 회원 정보 없음 -> user/signup
-    else:
-      return jsonify({ "error": "true" }), 400 # 로그인 되지 않음 -> user/login
-  return wrapper
-
-@app.route('/user/checkLogin')
-@login_required
-def LoggedIn():
-  return jsonify({ "error": "false" }), 200
+#####################################################
 
 @app.route('/recordex', methods=['POST'])
 def updateExercise():
