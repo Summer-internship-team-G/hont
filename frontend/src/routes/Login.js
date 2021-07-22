@@ -17,17 +17,26 @@ const Login = () => {
         }
         
         const postData = async () => {
-            const postUrl = "http://localhost:5000/user/login";
+            const postUrl = "http://localhost:5000/auth/login";
             const postVal = {
                 id: account.id,
                 password: account.pw,
             }
-            await axios.post(postUrl, postVal)
-            .then((response) => {
-                if (response.data.error == "true") {
-                    alert("로그인에 실패하였습니다.");
+            // console.log(postVal);
+            await axios.post(postUrl, postVal, {
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-                else {
+            })
+            .then((response) => {
+                if (response.data.status == "fail") {
+                    alert(response.data.message);
+                }
+                else if (response.data.status == "success"){
+                    localStorage.clear();
+                    localStorage.setItem("token", response.data.auth_token);
+
+                    alert(response.data.message);
                     history.replace("/");
                 }
             });
@@ -47,6 +56,12 @@ const Login = () => {
 
     const history = useHistory();
     const {  handleAccount, handleLogin } = useGetData();
+
+    useEffect(() => {
+        if (localStorage.getItem('token') !== null) {
+            history.replace("/");
+        } 
+    }, []);
 
     return(
         <>
