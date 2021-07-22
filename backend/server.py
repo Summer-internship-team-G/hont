@@ -1,4 +1,4 @@
-from flask import Flask, Response,render_template, request, jsonify, abort, session, redirect
+from flask import Flask, Response,render_template, request, jsonify, abort, redirect
 import json
 from bson import json_util
 from datetime import datetime
@@ -13,10 +13,10 @@ from pymongo import MongoClient
 import mediapipe as mp
 from functools import wraps
 from werkzeug.utils import secure_filename
-from passlib.hash import pbkdf2_sha256
 import uuid
 from flask_restplus import Resource, Api
 from celery import Celery
+from flask_bcrypt import Bcrypt
 
 
 
@@ -36,6 +36,7 @@ app.config.SWAGGER_UI_DOC_EXPANSION = 'full'
 
 app.secret_key = b"'`D\x96\xf3m\xeb\x01b\x11\xb5\x05\x14S\x96\xbd"
 CORS(app)
+bcrypt = Bcrypt(app)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 # app.config['MONGODB_SETTINGS'] = {
 #     'host': os.environ['MONGODB_HOST'],
