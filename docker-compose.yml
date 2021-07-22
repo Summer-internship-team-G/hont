@@ -16,65 +16,73 @@ services:
             - /app/node_modules
         networks:
             - app-tier
- #elastic search container
 
     elasticsearch:
-        restart: always
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+        build:
+            context: elasticsearch/
+            args:
+                ELK_VERSION: $ELK_VERSION
+        volumes:
+          - type: bind
+            source: ./elasticsearch/config/elasticsearch.yml
+            target: /usr/share/elasticsearch/config/elasticsearch.yml
+            read_only: true
+          - type: volume
+            source: elasticsearch
+            target: /usr/share/elasticsearch/data
         ports:
             - "9200:9200"
             - "9300:9300"
         environment:
-            - ES_JAVA_OPTS=-Xms2048m -Xmx2048m
-            - discovery.type=single-node
-        healthcheck:
-            test: "wget -q -O - http://localhost:9200/_cat/health"
-            interval: 1s
-            timeout: 30s
-            retries: 300
-        ulimits:
-            memlock:
-                soft: -1
-                hard: -1
-        volumes:
-            #- eladata:/var/www/
-            - ./elasticsearch/data:/usr/share/elasticsearch/data
+            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+            ELASTIC_PASSWORD: changeme
+            # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+            # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+            discovery.type: single-node
         networks:
             - app-tier
     
-    kibana:
-        restart: always
-        image: docker.elastic.co/kibana/kibana:6.8.14
-        expose:
-            - 5601
-        ports:
-            - 5601:5601
-        depends_on:
-            - elasticsearch
-        environment:
-            - SERVER_PORT=5601
-            - SERVER_NAME=kibana.example.org
-            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-        networks:
-            - app-tier
-
-    monstache:
-        restart: always
-        image: rwynn/monstache:rel5
-        command: -f ./monstache.config.toml &
+    logstash:
+        build:
+            context: logstash/
+            args:
+                ELK_VERSION: $ELK_VERSION
         volumes:
-            - ./config/monstache.config.toml:/monstache.config.toml
-        depends_on:
-            - elasticsearch
-            - mongodb
-            - mongo2
-            - mongo3
-        links:
-            - elasticsearch
+          - type: bind
+            source: ./logstash/config/logstash.yml
+            target: /usr/share/logstash/config/logstash.yml
+            read_only: true
+          - type: bind
+            source: ./logstash/pipeline
+            target: /usr/share/logstash/pipeline
+            read_only: true
         ports:
-            - "8080:8080"
+            - "5001:5001/tcp"
+            - "5001:5001/udp"
+            - "9600:9600"
+        environment:
+            LS_JAVA_OPTS: "-Xmx256m -Xms256m"
         networks:
             - app-tier
+        depends_on:
+            - elasticsearch
+    
+    kibana:
+        build:
+            context: kibana/
+            args:
+                ELK_VERSION: $ELK_VERSION
+        volumes:
+          - type: bind
+            source: ./kibana/config/kibana.yml
+            target: /usr/share/kibana/config/kibana.yml
+            read_only: true
+        ports:
+            - "5601:5601"
+        networks:
+            - app-tier
+        depends_on:
+            - elasticsearch
             
 #mongodb container
     mongodb:
@@ -82,9 +90,10 @@ services:
         container_name: mongo
         ports:
             - "27017:27017"
-        restart: unless-stopped
-        command: mongod --replSet replication
-        #mongod --auth
+        expose:
+            - "27017"
+        restart: always
+        command: mongod --auth
         environment:
             MONGO_INITDB_ROOT_USERNAME: "admin"
             MONGO_INITDB_ROOT_PASSWORD: "password"
@@ -94,35 +103,6 @@ services:
             - mongodbdata:/data/db
         networks:
             - app-tier
-    mongo2:
-        image: mongo
-        ports:
-            - "27021:27017"
-        volumes:
-            - mongodbdata:/data/db
-        networks:
-            - app-tier
-        command: mongod --replSet replication
-        depends_on:
-            - mongodb
-    mongo3:
-        image: mongo
-        ports:
-            - "27022:27017"
-        volumes:
-            - mongodbdata:/data/db
-        networks:
-            - app-tier
-        command: mongod --replSet replication
-        depends_on:
-            - mongo2
-    mongosetup:
-        image: "setup-rspl"
-        depends_on:
-            - mongodb
-        networks:
-            - app-tier
-    
 #flask container
     api:
         build: 
@@ -162,12 +142,12 @@ services:
 networks:
     app-tier:
         driver: bridge
+
+
 volumes:
     mongodbdata:
         driver: local
     appdata:
         driver: local
-    eladata:
+    elasticsearch:
         driver: local
-        
-
