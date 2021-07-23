@@ -26,7 +26,7 @@ Library for Computer Vision: OpenCV-Python
 
 Database: MongoDB
 
-Message Broker: redis
+In-memory cache server: redis
 
 Asynchronous distributed task queuer: Celery
 
