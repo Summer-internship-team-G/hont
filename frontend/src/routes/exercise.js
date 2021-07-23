@@ -69,10 +69,6 @@ function Dosquat({ num }) {
     
             axios.post("http://localhost:5000/api/" + target, info).then((response) => {
                 if (response.data) {
-                    // console.log(response.data);
-                    // console.log(response.data.count);
-                    // console.log(response.data.guide);
-                
                     setGuideLine(response.data.guide);
                     setCount(count + response.data.count);
                 }
@@ -87,7 +83,7 @@ function Dosquat({ num }) {
             let today = new Date();
             today = today.toLocaleDateString();
             const postVal = {
-                // id: {id},
+                id: localStorage.getItem('id'),
                 exerDate: today,
                 exerType: num,
                 exerNum: count,
@@ -140,8 +136,8 @@ function Dosquat({ num }) {
             // }
             state: { 
                 date: today, 
-                time: {time}, 
-                count: {count}, 
+                time: time, 
+                count: count, 
             }
         })
     }
