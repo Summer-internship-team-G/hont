@@ -24,7 +24,11 @@ Deployment: Docker
 
 API Documentation Tool: Swagger
 
+Data colleting & searching & visualizing : ELK(elasticsearch, logstash, kibana)
+
 Code Editor: VSCode
+
+
 
 ## 프로젝트 명  
 실시간 영상 기반의 운동 자세 교정(스쿼트, 푸시업) 웹 사이트
