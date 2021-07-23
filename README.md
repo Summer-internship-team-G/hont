@@ -37,11 +37,13 @@ Code Editor: VSCode
 권예진, 류건열, 김시정, 장민지, 최예은
 
 ## 역할 분담  
-Frontend- 류건열
+Frontend - 류건열
 
-Backend- 권예진, 김시정
+Backend - 권예진, 김시정
 
-AI- 최예은, 장민지 
+Posture correction Algorithm - 최예은, 장민지 
+
+
 
 ## 기능  
 1. 운동하는 동안 실행한 횟수와 운동 시간을 확인할 수 있다.
