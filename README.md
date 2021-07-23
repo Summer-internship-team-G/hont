@@ -1,17 +1,7 @@
 # 2021 SiliconValley Intership Project
 
-# 프로젝트 명  
-실시간 영상 기반의 운동 자세 교정(스쿼트, 푸시업) 웹 사이트
-  
-# 팀원
-권예진, 류건열, 김시정, 장민지, 최예은
-
-# 역할 분담  
-Frontend- 류건열
-
-Backend- 권예진, 김시정
-
-AI- 최예은, 장민지 
+# System Architecture
+![SA](https://user-images.githubusercontent.com/69978041/126726530-4f6e33e9-263f-4ffa-a533-ce96a6e75d45.png)
 
 # 개발 스택
 JavaScript Framework: React
@@ -35,6 +25,19 @@ Deployment: Docker
 API Documentation Tool: Swagger
 
 Code Editor: VSCode
+
+# 프로젝트 명  
+실시간 영상 기반의 운동 자세 교정(스쿼트, 푸시업) 웹 사이트
+  
+# 팀원
+권예진, 류건열, 김시정, 장민지, 최예은
+
+# 역할 분담  
+Frontend- 류건열
+
+Backend- 권예진, 김시정
+
+AI- 최예은, 장민지 
 
 # 기능  
 1. 운동하는 동안 실행한 횟수와 운동 시간을 확인할 수 있다.
