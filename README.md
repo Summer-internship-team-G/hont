@@ -24,7 +24,7 @@ Deployment: Docker
 
 API Documentation Tool: Swagger
 
-Data colleting & searching & visualizing : ELK(elasticsearch, logstash, kibana)
+Data collecting & searching & visualizing : ELK(elasticsearch, logstash, kibana)
 
 Code Editor: VSCode
 
