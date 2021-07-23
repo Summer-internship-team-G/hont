@@ -35,7 +35,8 @@ const Login = () => {
                 else if (response.data.status == "success"){
                     localStorage.clear();
                     localStorage.setItem("token", response.data.auth_token);
-
+                    localStorage.setItem("id", account.id);
+                    
                     alert(response.data.message);
                     history.replace("/");
                 }
