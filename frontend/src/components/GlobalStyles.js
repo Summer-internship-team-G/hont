@@ -22,6 +22,10 @@ const GlobalStyles = createGlobalStyle`
         text-decoration: none;
     }
 
+    .boxShadow{
+        box-shadow: 0px 5px 20px -5px #606060;
+    }
+
     .textShadow{
         text-shadow: 3px 3px 5px #606060;
     }
@@ -52,6 +56,33 @@ const GlobalStyles = createGlobalStyle`
 
     .headerItem:nth-child(2){
         flex-grow: 1;
+    }
+
+    .lightest{
+        background-color: rgba(5, 128, 217, 0.4);
+    }
+
+    .neutral{
+        background-color: rgba(5, 128, 217, 0.6);
+    }
+
+    .darkest{
+        background-color: rgba(5, 128, 217, 0.8);
+    }
+
+    .bigBtn{
+        margin-top: 100px;
+        font-size: 72px;
+        width: 420px;
+        height: 195px;
+        margin-left: 40px;
+        margin-right: 40px;
+        color: white;
+        font-family: "Coda";
+        font-weight: bold;
+        border-radius: 150px;
+        border: 0;
+        outline: 0;
     }
 `;
 
