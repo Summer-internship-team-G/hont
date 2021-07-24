@@ -305,7 +305,7 @@ def encode_auth_token(user_id):
     """
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
@@ -324,17 +324,24 @@ def decode_auth_token(auth_token):
     :param auth_token:
     :return: integer|string
     """
-    try:
-        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
-        is_blacklisted_token = check_blacklist(auth_token)
-        if is_blacklisted_token:
-            return 'Token blacklisted. Please log in again.'
-        else:
-            return payload['sub']
-    except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
-    except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
+    # try:
+    #     payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+    #     is_blacklisted_token = check_blacklist(auth_token)
+    #     if is_blacklisted_token:
+    #         return 'Token blacklisted. Please log in again.'
+    #     else:
+    #         return payload['sub']
+    # except jwt.ExpiredSignatureError:
+    #     return 'Signature expired. Please log in again.'
+    # except jwt.InvalidTokenError:
+    #     return 'Invalid token. Please log in again.'
+
+    payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'), algorithms=["HS256"])
+    is_blacklisted_token = check_blacklist(auth_token)
+    if is_blacklisted_token:
+        return 'Token blacklisted. Please log in again.'
+    else:
+        return payload['sub']
 
 
 def check_blacklist(auth_token):
@@ -405,7 +412,7 @@ class User:
             # fetch the user data
             user = db.users.find_one({"id": r_id})
             if user and bcrypt.check_password_hash(user['password'], r_password):
-                auth_token = User.encode_auth_token(user['user_idx'])
+                auth_token = encode_auth_token(user['user_idx'])
                 if auth_token:
                     remove_blacklist(auth_token) # 블랙리스트에서 삭제
                     responseObject = {
@@ -475,7 +482,7 @@ class User:
         else:
             auth_token = ''
         if auth_token:
-            resp = decode_auth_token(auth_token)
+            resp = decode_auth_token(auth_token) 
             if not isinstance(resp, str):
             # if db.users.find_one({"user_idx": resp}):
                 # mark the token as blacklisted
@@ -524,13 +531,11 @@ def logout():
     return User().logout()
 
 ####################### 운동 api ########################
-
 class Exercise:
 
     def updateExercise(self):
-        print(request.is_json)
+        # print(request.is_json)
         exercise = request.get_json()
-
         # exercise = {
         #     "id": 
         #     "exerDate": "2020-07-14"
@@ -538,40 +543,40 @@ class Exercise:
         #     "exerNum": 정수
         #     "exerTime": 정수 (초 단위)  
         # }
-        
-        # db.exercises에 id, exerDate가 일치하는 운동 기록 검색
-        # 만약 일치하는 운동 기록 이미 있다면 squarNum/pushupNum, everTime을 preNum, preTime변수에 저장
-        # db의 squarNum/pushNum, exerTime 갱신
 
-        prePN, preSN, preTime = 0, 0, 0
-        if db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']}):
-            pre = db.exercises.find_one({"id": exercise['id'], "exerDate": exercise['exerDate']})
-            prePN = pre['pushupNum']
-            preSN = pre['squartNum']
-            preTime = pre['exerTime']
         if exercise['exerType'] == "1":
-            db.exercises.update_one(
-                {"id": exercise['id'], "exerDate": exercise['exerDate'] },
-                {"$set": {"squartNum": preSN + exercise['exerNum'], "pushupNum": prePN, "exerTime": preTime + exercise['exerTime']}}, 
-                upsert = True
-            )
+            db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squartNum": exercise['exerNum'], "pushupNum": 0, "exerTime": exercise['exerTime']})
         else:
-            db.exercises.update_one(
-                {"id": exercise['id'], "exerDate": exercise['exerDate'] },
-                {"$set": {"squartNum": preSN, "pushupNum": prePN + exercise['exerNum'], "exerTime": preTime + exercise['exerTime']}}, 
-                upsert = True
-            )
-
+            db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squartNum": 0, "pushupNum":  exercise['exerNum'], "exerTime": exercise['exerTime']})
         return jsonify(exercise), 200
 
     def showExercises(self):
         user_info = request.get_json()
-        
-        exercises = db.exercise.find_one({"id": user_info['id'], "exerDate": user_info['exerDate']})
-        if exercises:
-            return jsonify(exercises), 200
-        return jsonify({ "error": "No workout records" }), 402
-
+        r_id = user_info['id']
+        r_exerDate= user_info['exerDate']
+        cursor = db.exercises.find({"id": r_id, "exerDate": r_exerDate})
+        if cursor.count():
+            print("-------------")
+            print("값 존재!:", cursor.count())
+            print("-------------")
+            result_dict = {}
+            key = 0
+            for doc in cursor:
+                key += 1
+                result_dict[str(key)] = {
+                    "squartNum": doc["squartNum"],
+                    "pushupNum": doc["pushupNum"],
+                    "exerTime": doc["exerTime"]
+                    }
+                print(result_dict[str(key)])
+            print("-------------")
+            print(result_dict)
+            print(type(result_dict))
+            return jsonify(result_dict), 200
+        else:
+            print("값 없음:", cursor.count)
+            return jsonify( {"error": "No workout records" }), 402
+            
 # db.exercises.document = {
 #     "id": "~~",
 #     "exerDate": "2021-07-14",
@@ -584,7 +589,7 @@ class Exercise:
 def updateExercise():
     return Exercise().updateExercise()
 
-@app.route('/exercise/statistics')
+@app.route('/exercise/statistics', methods=['POST'])
 def showExercises():
     return Exercise().showExercises()
 
