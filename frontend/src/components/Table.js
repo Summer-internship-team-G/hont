@@ -6,15 +6,15 @@ const Table = ({ today, columns, data }) => {
     let pushupSum = 0;
     let timeSum = 0;
 
-    data.map(({squat, pushup, time}) =>{
-        squatSum += squat;
-        pushupSum += pushup;
-        timeSum += time;
-    });
+    data.map(value => {
+        squatSum += Number(value.squatNum);
+        pushupSum += Number(value.pushupNum);
+        timeSum += Number(value.exerTime);
+    })
 
     return(
         <table>
-            <caption>{today}</caption>
+            <caption className="textShadow2">{today}</caption>
             <thead>
                 <tr>
                     {columns.map((column) => (
@@ -23,12 +23,12 @@ const Table = ({ today, columns, data }) => {
                 </tr>
             </thead>
             <tbody>
-                {data.map(({ squat, pushup, time }) => (
-                    <tr key={ num + squat + pushup + time}>
+                {data.map(value => (
+                    <tr key = {num + value.squatNum + value.pushupNum + value.exerTime}>
                         <td>{num++}</td>
-                        <td>{squat}회</td>
-                        <td>{pushup}회</td>
-                        <td>{time}초</td>
+                        <td>{Number(value.squatNum)}회</td>
+                        <td>{Number(value.pushupNum)}회</td>
+                        <td>{Number(value.exerTime)}초</td>
                     </tr>
                 ))}
                 <tr key="합계">
