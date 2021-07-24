@@ -591,7 +591,7 @@ class Exercise:
 def updateExercise():
     return Exercise().updateExercise()
 
-@app.route('/exercise/statistics')
+@app.route('/exercise/statistics', methods=['POST'])
 def showExercises():
     return Exercise().showExercises()
 
