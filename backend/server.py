@@ -305,7 +305,7 @@ def encode_auth_token(user_id):
     """
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=0),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id
         }
@@ -324,17 +324,24 @@ def decode_auth_token(auth_token):
     :param auth_token:
     :return: integer|string
     """
-    try:
-        payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
-        is_blacklisted_token = check_blacklist(auth_token)
-        if is_blacklisted_token:
-            return 'Token blacklisted. Please log in again.'
-        else:
-            return payload['sub']
-    except jwt.ExpiredSignatureError:
-        return 'Signature expired. Please log in again.'
-    except jwt.InvalidTokenError:
-        return 'Invalid token. Please log in again.'
+    # try:
+    #     payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
+    #     is_blacklisted_token = check_blacklist(auth_token)
+    #     if is_blacklisted_token:
+    #         return 'Token blacklisted. Please log in again.'
+    #     else:
+    #         return payload['sub']
+    # except jwt.ExpiredSignatureError:
+    #     return 'Signature expired. Please log in again.'
+    # except jwt.InvalidTokenError:
+    #     return 'Invalid token. Please log in again.'
+
+    payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'), algorithms=["HS256"])
+    is_blacklisted_token = check_blacklist(auth_token)
+    if is_blacklisted_token:
+        return 'Token blacklisted. Please log in again.'
+    else:
+        return payload['sub']
 
 
 def check_blacklist(auth_token):
@@ -405,7 +412,7 @@ class User:
             # fetch the user data
             user = db.users.find_one({"id": r_id})
             if user and bcrypt.check_password_hash(user['password'], r_password):
-                auth_token = User.encode_auth_token(user['user_idx'])
+                auth_token = encode_auth_token(user['user_idx'])
                 if auth_token:
                     remove_blacklist(auth_token) # 블랙리스트에서 삭제
                     responseObject = {
@@ -475,7 +482,7 @@ class User:
         else:
             auth_token = ''
         if auth_token:
-            resp = decode_auth_token(auth_token)
+            resp = decode_auth_token(auth_token) 
             if not isinstance(resp, str):
             # if db.users.find_one({"user_idx": resp}):
                 # mark the token as blacklisted
