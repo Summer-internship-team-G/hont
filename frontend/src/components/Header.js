@@ -38,39 +38,49 @@ export default withRouter(({ location: { pathname }}) => {
                   pathname === "/Result" ||
                   pathname === "/statistics";
 
-  const [auth, setAuth] = useState("");
+  const useGetData = () => {
+    const [auth, setAuth] = useState("");
+    
+    useEffect(() => {
+      if (localStorage.getItem('token') !== null){
+        setAuth(true);
+      }
+      else {
+        setAuth(false);
+      }
+    }, [localStorage.getItem('token')])
+    
+    const handleLogout = async () => {
+      const postUrl = "http://localhost:5000/auth/logout";
+      const postVal = {
+        quit: true,
+      }
+      await axios.post(postUrl, postVal, {
+        headers: {
+          'Content-type' : 'application/json',
+          'Authorization' : `JWT ${localStorage.getItem("token")}`,
+        }
+      })
+      .then((response) => {
+        if(response.data.status == "success"){
+          alert(response.data.message);
+          setAuth(false);
+          localStorage.clear();
+        }
+        else{
+          alert(response.data.message);
+        }
+      })
+    }
 
-  useEffect(() => {
-    console.log(localStorage.getItem('token'));
-    if (localStorage.getItem('token') !== null){
-      setAuth(true);
+    return {
+      auth,
+      handleLogout,
     }
-    else {
-      setAuth(false);
-    }
-  }, localStorage.getItem('token'))
-
-  const handleLogout = async () => {
-    const postUrl = "http://localhost:5000/auth/logout";
-    const postVal = {
-      quit: true,
-    }
-    await axios.post(postUrl, postVal, {
-      headers: {
-        'Content-type' : 'application/json',
-        'Authorization' : `JWT ${localStorage.getItem("token")}`,
-      }
-    })
-    .then((response) => {
-      if(response.data.status == "success"){
-        alert(response.data.message);
-        localStorage.clear();
-      }
-      else{
-        alert(response.data.message);
-      }
-    })
   }
+
+  const { auth, handleLogout } = useGetData();
+
   return(
     <Header className="headerContainer">
           {isSVG2 ? <SVG2/> : <SVG1/>}
