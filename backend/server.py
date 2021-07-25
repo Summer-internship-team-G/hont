@@ -531,6 +531,7 @@ def logout():
     return User().logout()
 
 ####################### 운동 api ########################
+
 class Exercise:
 
     def updateExercise(self):
@@ -556,31 +557,42 @@ class Exercise:
         r_exerDate= user_info['exerDate']
         cursor = db.exercises.find({"id": r_id, "exerDate": r_exerDate})
         if cursor.count():
-            print("-------------")
-            print("값 존재!:", cursor.count())
-            print("-------------")
+            # print("-------------")
+            # print("값 존재!:", cursor.count())
+            # print("-------------")
+            # result_dict = {}
+            # key = 0
+            # for doc in cursor:
+            #     key += 1
+            #     result_dict[str(key)] = {
+            #         "squatNum": doc["squatNum"],
+            #         "pushupNum": doc["pushupNum"],
+            #         "exerTime": doc["exerTime"]
+            #         }
+            #     print(result_dict[str(key)])
+            # print("-------------")
+            # print(result_dict)
+            # print(type(result_dict))
+            
             result_dict = {}
-            key = 0
+            key = "key"
+            value = []
             for doc in cursor:
-                key += 1
-                result_dict[str(key)] = {
+                value.append({
                     "squatNum": doc["squatNum"],
                     "pushupNum": doc["pushupNum"],
                     "exerTime": doc["exerTime"]
-                    }
-                print(result_dict[str(key)])
-            print("-------------")
-            print(result_dict)
-            print(type(result_dict))
+                })
+            result_dict[key] = value
+            # print(result_dict)
             return jsonify(result_dict), 200
         else:
-            print("값 없음:", cursor.count)
+            # print("값 없음:", cursor.count())
             return jsonify( {"error": "No workout records" }), 402
-
 # db.exercises.document = {
 #     "id": "~~",
 #     "exerDate": "2021-07-14",
-#     "squatNum": 정수,
+#     "squarNum": 정수,
 #     "pushupNum": 정수,
 #     "everTime": 정수 (초 단위)
 # }
@@ -592,6 +604,7 @@ def updateExercise():
 @app.route('/exercise/statistics', methods=['POST'])
 def showExercises():
     return Exercise().showExercises()
+
 
 
 ####################### rest api ########################
