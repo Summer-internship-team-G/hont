@@ -592,7 +592,7 @@ class Exercise:
 # db.exercises.document = {
 #     "id": "~~",
 #     "exerDate": "2021-07-14",
-#     "squarNum": 정수,
+#     "squatNum": 정수,
 #     "pushupNum": 정수,
 #     "everTime": 정수 (초 단위)
 # }
