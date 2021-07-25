@@ -30,6 +30,14 @@ const GlobalStyles = createGlobalStyle`
         text-shadow: 3px 3px 5px #606060;
     }
 
+    /* big */
+        .contents1{
+        min-height: calc(100vh - 340px);
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 80px;
+    }
+
     /* small */
     .contents2{
         min-height: calc(100vh - 400px);
@@ -170,6 +178,20 @@ const GlobalStyles = createGlobalStyle`
         margin-left: 40px;
         margin-right: 40px;
         color: white;
+        font-weight: bold;
+        border-radius: 150px;
+        border: 0;
+        outline: 0;
+    }
+
+    .middleBtn{
+        margin-top: 30px;
+        height: 100px;
+        width: 175px;
+        font-weight: 800;
+        font-size: 36px;
+        color: white;
+        font-family: "Coda";
         font-weight: bold;
         border-radius: 150px;
         border: 0;
