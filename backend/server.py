@@ -545,9 +545,9 @@ class Exercise:
         # }
 
         if exercise['exerType'] == "1":
-            db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squartNum": exercise['exerNum'], "pushupNum": 0, "exerTime": exercise['exerTime']})
+            db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squatNum": exercise['exerNum'], "pushupNum": 0, "exerTime": exercise['exerTime']})
         else:
-            db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squartNum": 0, "pushupNum":  exercise['exerNum'], "exerTime": exercise['exerTime']})
+            db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squatNum": 0, "pushupNum":  exercise['exerNum'], "exerTime": exercise['exerTime']})
         return jsonify(exercise), 200
 
     def showExercises(self):
@@ -564,7 +564,7 @@ class Exercise:
             for doc in cursor:
                 key += 1
                 result_dict[str(key)] = {
-                    "squartNum": doc["squartNum"],
+                    "squatNum": doc["squatNum"],
                     "pushupNum": doc["pushupNum"],
                     "exerTime": doc["exerTime"]
                     }
@@ -576,11 +576,11 @@ class Exercise:
         else:
             print("값 없음:", cursor.count)
             return jsonify( {"error": "No workout records" }), 402
-            
+
 # db.exercises.document = {
 #     "id": "~~",
 #     "exerDate": "2021-07-14",
-#     "squarNum": 정수,
+#     "squatNum": 정수,
 #     "pushupNum": 정수,
 #     "everTime": 정수 (초 단위)
 # }
