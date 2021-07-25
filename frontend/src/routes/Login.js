@@ -1,6 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+
+
+const Input = styled.input`
+    border: 1px solid black;
+    border-radius: 0px;
+    height: 50px;
+    width: 400px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px;
+    display: inline-block;
+`;
+
+const Label = styled.label`
+    position: relative;
+    top: 10px;
+    font-family: "Coda";
+    font-size: 36px;
+    font-weight: 600;
+    width: 200px;
+    display: inline-block;
+    text-align: left;
+`;
 
 const Login = () => {
     const useGetData = () => {
@@ -50,13 +74,16 @@ const Login = () => {
         }
 
         return {
+            // account,
+            // success,
             handleAccount,
             handleLogin,
         }
     }
 
+    // const { setUser } = useUserContext();
     const history = useHistory();
-    const {  handleAccount, handleLogin } = useGetData();
+    const { handleAccount, handleLogin } = useGetData();
 
     useEffect(() => {
         if (localStorage.getItem('token') !== null) {
@@ -65,11 +92,10 @@ const Login = () => {
     }, []);
 
     return(
-        <>
             <div className="contents1">
-                <form>
-                    <label htmlFor="id">아이디 </label>
-                    <input 
+                <form className="textShadow2">
+                    <Label htmlFor="id">아이디 </Label>
+                    <Input 
                         type="text" 
                         id="id" 
                         name="id" 
@@ -78,8 +104,8 @@ const Login = () => {
                         onChange={handleAccount}
                     />
                     <p/>
-                    <label htmlFor="password">비밀번호 </label>
-                    <input 
+                    <Label htmlFor="password">비밀번호 </Label>
+                    <Input 
                         type="password"
                         id="pw"
                         name="pw"
@@ -88,11 +114,10 @@ const Login = () => {
                         onChange={handleAccount}
                     />
                     <p/>
-                    <button className="lightest bigBtn" type="reset">초기화</button>
-                    <button className="neutral bigBtn" type="button" onClick={handleLogin}>로그인</button>
+                    <button className="lightest bigBtn boxShadow" type="reset">초기화</button>
+                    <button className="neutral bigBtn boxShadow" type="button" onClick={handleLogin}>로그인</button>
                 </form>
             </div>
-        </>   
     )
 }
 

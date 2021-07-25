@@ -1,6 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
+
+const Input = styled.input`
+    border: 1px solid black;
+    border-radius: 0px;
+    height: 50px;
+    width: 400px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px;
+    display: inline-block;
+`;
+
+const Label = styled.label`
+    position: relative;
+    top: 10px;
+    font-family: "Coda";
+    font-size: 36px;
+    font-weight: 600;
+    width: 200px;
+    display: inline-block;
+    text-align: left;
+`;
 
 const Signup = () => {
     const useGetData = () => {
@@ -31,7 +54,6 @@ const Signup = () => {
             })
             .then((response) => {
                 if (response.data.status == "success") {
-                    // setSuccess(true);
                     localStorage.clear();
                     localStorage.setItem("token", response.data.auth_token);
                     alert(response.data.message);
@@ -54,14 +76,21 @@ const Signup = () => {
         }
     }
 
+
     const history = useHistory();
     const { handleAccount, handleSignup } = useGetData();
 
+    useEffect(() => {
+        if (localStorage.getItem('token') !== null) {
+            history.replace("/");
+        } 
+    }, []);
+
     return(
         <div className="contents1">
-            <form>
-                <label htmlFor="name">이름 </label>
-                <input 
+            <form className="textShadow2">
+                <Label htmlFor="name">이름 </Label>
+                <Input 
                     type="text" 
                     id="name" 
                     name="name" 
@@ -70,8 +99,8 @@ const Signup = () => {
                     onChange={handleAccount}
                 />
                 <p/>
-                <label htmlFor="id">아이디 </label>
-                <input 
+                <Label htmlFor="id">아이디 </Label>
+                <Input 
                     type="text" 
                     id="id" 
                     name="id" 
@@ -80,8 +109,8 @@ const Signup = () => {
                     onChange={handleAccount}
                 />
                 <p/>
-                <label htmlFor="password">비밀번호 </label>
-                <input 
+                <Label htmlFor="password">비밀번호 </Label>
+                <Input 
                     type="password"
                     id="pw"
                     name="pw"
@@ -90,8 +119,8 @@ const Signup = () => {
                     onChange={handleAccount}
                 />
                 <p/>
-                <button className="lightest bigBtn" type="reset">초기화</button>
-                <button className="darkest bigBtn" type="button" onClick={handleSignup}>회원가입</button>
+                <button className="lightest bigBtn boxShadow" type="reset">초기화</button>
+                <button className="darkest bigBtn boxShadow" type="button" onClick={handleSignup}>회원가입</button>
             </form>
         </div>
     )

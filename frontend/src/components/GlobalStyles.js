@@ -30,8 +30,12 @@ const GlobalStyles = createGlobalStyle`
         text-shadow: 3px 3px 5px #606060;
     }
 
+    .textShadow2{
+        text-shadow: 1px 1px 3px #606060;
+    }
+
     /* big */
-        .contents1{
+    .contents1{
         min-height: calc(100vh - 340px);
         text-align: center;
         margin-top: 20px;
