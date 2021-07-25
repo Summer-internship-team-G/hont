@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from 'react-router-dom';
-import pushup from '../image/pushup.png';
-import squat from '../image/squat.png';
+import pushup from '../images/pushup.png';
+import squat from '../images/squat.png';
 import styled from "styled-components";
 
 export default ({num, link}) => {

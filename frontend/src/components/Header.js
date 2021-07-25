@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from "styled-components";
 import { SVG1, SVG2 } from './SVG';
-import hontLogo from '../image/Logo.png';
+import hontLogo from '../images/Logo.png';
 import axios from "axios";
 
 const Logo = styled.span`
