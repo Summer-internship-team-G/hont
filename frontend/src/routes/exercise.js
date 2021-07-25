@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Webcam from "react-webcam";
+import styled from "styled-components";
 
 //  start   stop
 //  false   false (초기)
@@ -9,7 +10,25 @@ import Webcam from "react-webcam";
 //  true    false (운동start)
 //  false   true  (운동stop)
 
-// function Dosquat({ num, id }) {
+const PresentResult = styled.div`
+    height: 500px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    flex-flow: row wrap;
+`;
+
+const ExerInfo = styled.div`
+    flex-basis: 100%;
+    color: black;
+    font-size: 36px;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 10px;
+`;
+
 function Dosquat({ num }) {
     const useGetData = () => {
         const webcamRef = useRef(null);
@@ -67,7 +86,7 @@ function Dosquat({ num }) {
             let target = "";
             num == 1 ? target = "analyzeSquat" : target = "analyzePushup";
     
-            axios.post("http://localhost:5000/api/" + target, info).then((response) => {
+            await axios.post("http://localhost:5000/api/" + target, info).then((response) => {
                 if (response.data) {
                     setGuideLine(response.data.guide);
                     setCount(count + response.data.count);
@@ -89,7 +108,7 @@ function Dosquat({ num }) {
                 exerNum: count,
                 exerTime: time,
             }
-            await axios.post("http://localhost:5000/api/recordex", postVal);
+            await axios.post("http://localhost:5000/recordex", postVal);
         }
 
         //stop 버튼 핸들러
@@ -116,7 +135,7 @@ function Dosquat({ num }) {
     const history = useHistory();
     const { start, stop, clickStartBtn, clickStopBtn, webcamRef, time, guideLine, count } = useGetData();
     const videoConstraints = {
-        width: 700,
+        width: 900,
         height: 500,
         facingMode: "user",
     };
@@ -124,16 +143,14 @@ function Dosquat({ num }) {
     //버튼 눌렀을 때 axios 써서 값 받아오기
     const clickQuitBtn = (e) => {
         e.preventDefault();
-        let today = new Date();
-        today = today.toLocaleDateString();
+        let newDate = new Date();
+        let date = newDate.getDate();
+        let month = newDate.getMonth() + 1;
+        let year = newDate.getFullYear();
+
+        let today = `${year}년 ${month}월 ${date}일`;
         history.push({
             pathname: "/Result",
-            //testing data
-            // state: { 
-            //     date: today,
-            //     time: 1, 
-            //     count: 2, 
-            // }
             state: { 
                 date: today, 
                 time: time, 
@@ -144,28 +161,28 @@ function Dosquat({ num }) {
 
     return start || stop ? (
         <>
-            <div className="contents2">
-                <Webcam
-                    audio={false}
-                    ref={webcamRef}
-                    screenshotFormat="image/jpeg"
-                    videoConstraints={videoConstraints}
-                />
-                <div className="lightYellow">
-                    <div>
-                        <p>
-                            가이드라인 : {guideLine}
-                        </p>
-                        <p>
-                            시간 : {time}
-                        </p>
-                        <p>
-                            횟수 : {count}
-                        </p>
-                    </div>
+            <div className="contents2 contents2Container">
+                <div className="contents2Item boxShadow">
+                    <Webcam
+                        audio={false}
+                        ref={webcamRef}
+                        screenshotFormat="image/jpeg"
+                        videoConstraints={videoConstraints}
+                    />
                 </div>
-                <button id="stopBtn" className="lightYellow smallBtn" disabled={stop} onClick={clickStopBtn}>그만하기</button>
-                <button id="quitBtn" className="lightYellow smallBtn" disabled={!stop} onClick={clickQuitBtn}>종료하기</button>
+                <PresentResult className="lightYellow contents2Item">
+                        <ExerInfo>
+                            시간 : {time} {" "}
+                            횟수 : {count}
+                        </ExerInfo>
+                        <ExerInfo>
+                            가이드라인 : {guideLine}
+                        </ExerInfo>
+                </PresentResult>
+                <div className="contents2Item">
+                    <button id="stopBtn" className="lightYellow smallBtn" disabled={stop} onClick={clickStopBtn}>그만하기</button>
+                    <button id="quitBtn" className="lightYellow smallBtn" disabled={!stop} onClick={clickQuitBtn}>종료하기</button>
+                </div>
             </div>
         </>
     ) : (
