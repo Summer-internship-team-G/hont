@@ -215,6 +215,40 @@ const GlobalStyles = createGlobalStyle`
         margin-left: 20px;
         margin-right: 20px;
     }
+
+    table, td, th{
+        border: 1px solid gray;
+    }
+
+    table{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 50px;
+        text-align: center;
+    }
+
+    th{
+        color: black;
+        font-weight: 800;
+        font-size: 20px;
+        padding: 20px;
+        background-color: lightgray;
+    }
+
+    td{
+        color: black;
+        font-weight: 400;
+        font-size: 18px;
+        padding: 10px;
+        background-color: white;
+    }
+    
+    caption{
+        font-weight: 800;
+        font-size: 50px;
+        margin-bottom: 50px;
+    }
 `;
 
 export default GlobalStyles;
