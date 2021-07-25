@@ -98,6 +98,53 @@ const GlobalStyles = createGlobalStyle`
         flex-basis: 100%;
     }
 
+    .guideLineContainer{
+        width: 100%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-evenly;
+        align-items: center;
+        align-content: space-around;
+    }
+
+    .guideLineItem:nth-child(1), .guideLineItem:nth-child(2){
+        margin-top: 50px;
+        margin-bottom: 50px;
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-bottom: 40px;
+        padding-top: 40px;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        flex-flow: row wrap;
+        color: black;
+        font-size: 32px;
+        font-weight: 600;
+    }
+
+    .guideLineItem:nth-child(1){
+        flex-basis: 900px;
+    }
+
+    .guideLineItem:nth-child(2){
+        flex-basis: 700px;
+    }
+
+    .guideLineItem:nth-child(3){
+        flex-basis: 100%;
+    }
+
+    .squatImg{
+        height: 500px;
+        width: 900px;
+    }
+
+    .pushupImg{
+        height: 630px;
+        width: 800px;
+    }
+
     .lightest{
         background-color: rgba(5, 128, 217, 0.4);
     }
