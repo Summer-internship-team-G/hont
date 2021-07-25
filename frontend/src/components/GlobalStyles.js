@@ -123,7 +123,6 @@ const GlobalStyles = createGlobalStyle`
         margin-left: 40px;
         margin-right: 40px;
         color: white;
-        font-family: "Coda";
         font-weight: bold;
         border-radius: 150px;
         border: 0;
@@ -136,7 +135,6 @@ const GlobalStyles = createGlobalStyle`
         font-weight: 800;
         font-size: 24px;
         color: black;
-        font-family: "Coda";
         font-weight: bold;
         border-radius: 30px;
         border: 0;
