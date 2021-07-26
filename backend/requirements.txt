@@ -15,3 +15,4 @@ flask_bcrypt
 pyjwt==2.1.0
 elasticsearch
 configparser==5.0.2
+boto3

@@ -9,6 +9,7 @@ from cal_pushup import do_pushup
 from cal_pose import pose_squat, pose_pushup
 from record_exercise import Exercise
 from user import User
+import boto3
 
 app = Flask(__name__)
 api = Api(app, version='1.0', title='API title',
