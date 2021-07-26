@@ -7,10 +7,10 @@ def get_angle_v3(p1, p2, p3):
 
 ##스쿼트 한 기준
 def is_squat(hip_angle,l_knee_hip,r_knee_hip,l_knee_foot,r_knee_foot):
+    print("======is_squat start=======")
     squat_guide = ""
-    squat_count = 0
     action_status = True 
-
+    
     if 60 < hip_angle < 180 and l_knee_hip<=0.2 and r_knee_hip<=0.2 and l_knee_foot<=0.1 and r_knee_foot<=0.1:
         print("스쿼트 성공!")
         action_status = False
@@ -37,7 +37,13 @@ def is_squat(hip_angle,l_knee_hip,r_knee_hip,l_knee_foot,r_knee_foot):
             squat_guide += '무릎이 발끝선을 넘지 않게 해주세요\n'
             # print("무릎이 발끝선을 넘지 않게 해주세요")
 
-    return squat_count, squat_guide
+    if not action_status:
+        text = "성공"
+    else:
+        text = "실패"
+    print("======is_squat end=======")
+    
+    return action_status, squat_guide, text
 
 #스쿼트 - 올바른 스쿼트 자세 기준을 만든걸 던져줌
 # @celery.task()
@@ -59,6 +65,5 @@ def do_squat(shoulder_l, shoulder_r, hip_l, hip_r, knee_l, knee_r, foot_l, foot_
     l_knee_foot = squat_2(knee_l,foot_l)
     r_knee_foot = squat_2(knee_r,foot_r)
     
-    count, guide = is_squat(hip_angle,l_knee_hip,r_knee_hip,l_knee_foot,r_knee_foot)
-    return count, guide
-
+    count, guide, text = is_squat(hip_angle,l_knee_hip,r_knee_hip,l_knee_foot,r_knee_foot)
+    return count, guide, text
