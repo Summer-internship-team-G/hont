@@ -19,24 +19,23 @@ def is_squat(hip_angle,l_knee_hip,r_knee_hip,l_knee_foot,r_knee_foot):
         print("r_knee_foot"+str(r_knee_foot))
 
     else: #쉬고 있을때?
-        print("스쿼트 실패ㅠㅠ")
+        # print("스쿼트 실패ㅠㅠ")
         if action_status == False :
-            squat_count+= 1
-            print("스쿼트 개수 증가!!")
+            # print("스쿼트 개수 증가!!")
             action_status = True
             
         if hip_angle<60 :
             squat_guide +='엉덩이 높이를 올려주세요\n'
-            print("엉덩이 각도"+str(hip_angle))
+            # print("엉덩이 각도"+str(hip_angle))
         if hip_angle>180:           
             squat_guide += '엉덩이 높이를 낮춰주세요\n'
-            print("엉덩이 각도"+str(hip_angle))
+            # print("엉덩이 각도"+str(hip_angle))
         if l_knee_hip>0.2 or r_knee_hip>0.2:
             squat_guide += '허벅지가 바닥과 수평이 되도록 해주세요\n'
-            print("허벅지가 바닥과 수평이 되도록 해주세요")
+            # print("허벅지가 바닥과 수평이 되도록 해주세요")
         if l_knee_foot > 0.1 or r_knee_foot > 0.1:
             squat_guide += '무릎이 발끝선을 넘지 않게 해주세요\n'
-            print("무릎이 발끝선을 넘지 않게 해주세요")
+            # print("무릎이 발끝선을 넘지 않게 해주세요")
 
     return squat_count, squat_guide
 
