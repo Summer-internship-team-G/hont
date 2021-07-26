@@ -84,6 +84,29 @@ def checkAuth():
 def logout():
     return User().logout()
 
+####################### TTS api ########################
+def connectToPolly():
+    region_name = 'ap-northeast-2'
+    polly_client = boto3.client(
+        'polly',
+        aws_access_key_id = 'AKIAU6ECZPVOP6A4VROO',
+        aws_secret_access_key = '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',
+        region_name = region_name
+    )
+    return polly_client
+
+@app.route('/textToSpeech', methods=['GET'])
+def textToSpeech(text):
+
+ polly_client = connectToPolly()
+ response = polly_client.synthesize_speech(
+     Text="<speak>" + text + "</speak>",    
+     VoiceId='Seoyeon',
+     OutputFormat='mp3',
+     TextType='ssml'
+     )
+ return send_file(response.get("AudioStream"), mimetype="audio/mp3")
+
 ######################## swagger ########################
 @ns.route('/<string:text>')
 @ns.response(200, 'Found')
