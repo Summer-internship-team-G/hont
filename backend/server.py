@@ -31,31 +31,41 @@ client = MongoClient('mongodb://admin:password@mongodb')
 db = client.webapp
 
 
+
 ######################## 푸시업 분석 API ########################
+
+class Pushup:
+    pushup_count = 0
+    def analyze_pushup(self):
+        image_file = request.files['file']
+        image_file.save("posture.png")
+        l_sh, r_sh, l_elbow, r_elbow, l_wrist,r_wrist, l_hip, r_hip, l_ankle, r_ankle = pose_pushup()
+        status, guide, text = do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_ankle, r_ankle)
+        if not status:
+            Pushup.pushup_count += 1
+        return jsonify({'count': Pushup.pushup_count, "guide": guide, "text": text})
+
 @app.route('/api/analyzePushup', methods=['POST'])
 def analyze_pushup():
-   
-    image_file = request.files['file']
-    image_file.save("posture.png")
-
-   
-    l_sh, r_sh, l_elbow, r_elbow, l_wrist,r_wrist, l_hip, r_hip, l_ankle, r_ankle = pose_pushup()
-    count, guide = do_pushup(l_sh, r_sh, l_elbow, r_elbow, l_wrist, r_wrist, l_hip, r_hip, l_ankle, r_ankle)
-
-    return jsonify({'count': count, "guide": guide})
+   return Pushup().analyze_pushup()
 
 
 ######################## 스쿼트 분석 API ########################
+
+class Squat:
+    squat_count = 0
+    def analyze_squat(self):
+        image_file = request.files['file']
+        image_file.save("posture.png")
+        l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot = pose_squat()
+        status, guide, text = do_squat(l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot)
+        if not status:
+            Squat.squat_count += 1
+        return jsonify({'count': Squat.squat_count, "guide": guide, "text": text})
+
 @app.route('/api/analyzeSquat', methods=['POST'])
-def analyze_squat():
-   
-    image_file = request.files['file']
-    image_file.save("posture.png")
-
-    l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot = pose_squat()
-    count, guide = do_squat(l_sh, r_sh, l_hip, r_hip, l_knee, r_knee, l_foot, r_foot)
-
-    return jsonify({'count': count, "guide": guide})       
+def analyze_squate():
+    return Squat().analyze_squat()
 
 ######################## 운동 관련 API ########################
 
