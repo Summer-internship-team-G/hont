@@ -99,7 +99,7 @@ function Dosquat({ num }) {
   
                 
                     setGuideLine(response.data.guide);
-                    setCount(count + response.data.count);
+                    setCount(response.data.count);
                 }
                 else {
                     console.log('response 실패');
