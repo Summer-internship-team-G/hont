@@ -113,17 +113,18 @@ def connectToPolly():
     )
     return polly_client
 
-@app.route('/textToSpeech', methods=['POST'])
-def textToSpeech():
-    data = request.get_json()
-    text = data.get('count', '')
+@app.route('/textToSpeech/<int:count>', methods=['GET'])
+def textToSpeech(count):
+    print("=== textToSpeech start ====")
+
     polly_client = connectToPolly()
     response = polly_client.synthesize_speech(
-        Text="<speak>" + text + "</speak>",    
+        Text="<speak>" + str(count) + "</speak>",    
         VoiceId='Seoyeon',
         OutputFormat='mp3',
         TextType='ssml'
         )
+
     return send_file(response.get("AudioStream"), mimetype="audio/mp3")
 
 ######################## swagger ########################
