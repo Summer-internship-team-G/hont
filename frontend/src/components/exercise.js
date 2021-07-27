@@ -105,6 +105,27 @@ function Dosquat({ num }) {
                     console.log('response 실패');
                 }
             });
+            const response = await axios.get("http://localhost:5000/textToSpeech/"+count,{
+                responseType : 'arraybuffer'
+            })
+            
+            console.log("response : ",response);
+
+            // let arr = toArrayBuffer(response.data);
+            // makeAudio(arr);
+
+            const audioContext = getAudioContext();
+
+            // makeAudio(response)
+            const audioBuffer = await audioContext.decodeAudioData(response.data);
+
+            //create audio source
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+            console.log("source : ", source);
+            setAudioSource(source);
         }
 
         //stop 버튼을 눌렀을 때 database에 저장하기 위한 post
