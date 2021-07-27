@@ -10,6 +10,8 @@ from cal_pose import pose_squat, pose_pushup
 from record_exercise import Exercise
 from user import User
 import boto3
+import os
+from celery import Celery
 
 app = Flask(__name__)
 api = Api(app, version='1.0', title='API title',
@@ -30,6 +32,9 @@ bcrypt = Bcrypt(app)
 client = MongoClient('mongodb://admin:password@mongodb')
 db = client.webapp
 
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379'),
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'mongodb://localhost:27017/webapp')
+celery = Celery('tasks', broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND)
 
 
 ######################## 푸시업 분석 API ########################
@@ -70,6 +75,7 @@ def analyze_squate():
 ######################## 운동 관련 API ########################
 
 @app.route('/recordex', methods=['POST'])
+@celery.task()
 def updateExercise():
     return Exercise().updateExercise()
 
@@ -80,6 +86,7 @@ def showExercises():
 
 ######################## 사용자 API ########################
 @app.route('/auth/register', methods=['POST'])
+@celery.task()
 def register():
     return User().register()
 
