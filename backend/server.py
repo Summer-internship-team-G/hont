@@ -104,11 +104,11 @@ def logout():
 
 ####################### TTS api ########################
 def connectToPolly():
-    region_name = 'ap-northeast-2'
+    region_name = ''
     polly_client = boto3.client(
         'polly',
-        aws_access_key_id = 'AKIAU6ECZPVOP6A4VROO',
-        aws_secret_access_key = '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',
+        aws_access_key_id = '',
+        aws_secret_access_key = '',
         region_name = region_name
     )
     return polly_client
