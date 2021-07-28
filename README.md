@@ -1,4 +1,4 @@
-# 2021 Summer SiliconValley Internship Project
+# 2021 Summer SilliconValley Internship Project
 > **HONT : 혼자 + Training**
 > > HONT is a project that counts the number of exercises and provides exercise times, statistics on the day, suitable exercise searches by body part, and guidelines for those who exercise alone.
 
@@ -45,17 +45,29 @@
 ## Demo Video
 
 ## Frontend
+### 🍍Design
+  > [Design Document](https://www.notion.so/Design-Document-6c5e22d55a614606bd231c488e26e770)    
+  
+### Structure
+  > [frontend/src/components](./frontend/src/components) : Directory for components   
+  > [frontend/src/font](./frontend/src/font) : Directory for font   
+  > [frontend/src/images](./frontend/src/images) : Directory for images   
+  > [frontend/src/routes](./frontend/src/routes) : Directory for routes   
+
+<div align="right">
+    <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
+</div>
 
 ## Backend
 
 ## AI
 
 ## Contributors
-| Name | Country | Where to find you | Role |
+| Name | Country | Where to find us | Role |
 | ---- | ------- | ----------------- | ---- |
-| Yejin Kwon <br /> <img src="https://avatars.githubusercontent.com/yejin0928" width="100" />  | Republic Of Korea | [Github](https://github.com/yejin0928)| Back End |
-| Sijeong Kim <br /> <img src="https://avatars.githubusercontent.com/Si-jeong" width="100" />  | Republic Of Korea | [Github](https://github.com/Si-jeong)| Back End |
-| Geonyeol Ryu <br /> <img src="https://avatars.githubusercontent.com/rjsduf0503" width="100" />  | Republic Of Korea | [Github](https://github.com/rjsduf0503)| Front End |
+| Yejin Kwon <br /> <img src="https://avatars.githubusercontent.com/yejin0928" width="100" />  | Republic Of Korea | [Github](https://github.com/yejin0928)| Backend |
+| Sijeong Kim <br /> <img src="https://avatars.githubusercontent.com/Si-jeong" width="100" />  | Republic Of Korea | [Github](https://github.com/Si-jeong)| Backend |
+| Geonyeol Ryu <br /> <img src="https://avatars.githubusercontent.com/rjsduf0503" width="100" />  | Republic Of Korea | [Github](https://github.com/rjsduf0503)| Frontend |
 | Yeeun Choi <br /> <img src="https://avatars.githubusercontent.com/swcye" width="100" />  | Republic Of Korea | [Github](https://github.com/swcye)| AI |
 | Minji Jang <br /> <img src="https://avatars.githubusercontent.com/SUMMERLOVE7" width="100" />  | Republic Of Korea | [Github](https://github.com/SUMMERLOVE7)| AI |
 
