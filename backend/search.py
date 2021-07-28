@@ -31,10 +31,10 @@ def find_key(dic,val):
         for i in range(len(dic[key])):
             if(val==dic[key][i]):
                 return key
-
-
+    return val
+        
 def crawling_data(val):
-    url="https://www.bodybuilding.com/exercises/muscle/"+find_key(dic,val)
+    url="https://www.bodybuilding.com/exercises/finder/?muscle="+find_key(dic,val)
     data=requests.get(url)
     soup=BeautifulSoup(data.text,'html.parser')
     result_dict=[]
@@ -58,4 +58,5 @@ class Search:
         search_data = search_string['type']
         result=crawling_data(search_data)
         return jsonify(result)
+   
    
