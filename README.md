@@ -53,11 +53,11 @@
 ## Contributors
 | Name | Country | Where to find you | Role |
 | ---- | ------- | ----------------- | ---- |
-| Yejin Kwon <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/yejin0928)| Back End |
-| Sijeong Kim <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/Si-jeong)| Back End |
-| Geonyeol Ryu <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/rjsduf0503)| Front End |
-| Yeeun Choi <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/swcye)| AI |
-| Minji Jang <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/SUMMERLOVE7)| AI |
+| Yejin Kwon <br /> <img src="https://avatars.githubusercontent.com/yejin0928" width="100" />  | Republic Of Korea | [Github](https://github.com/yejin0928)| Back End |
+| Sijeong Kim <br /> <img src="https://avatars.githubusercontent.com/Si-jeong" width="100" />  | Republic Of Korea | [Github](https://github.com/Si-jeong)| Back End |
+| Geonyeol Ryu <br /> <img src="https://avatars.githubusercontent.com/rjsduf0503" width="100" />  | Republic Of Korea | [Github](https://github.com/rjsduf0503)| Front End |
+| Yeeun Choi <br /> <img src="https://avatars.githubusercontent.com/swcye" width="100" />  | Republic Of Korea | [Github](https://github.com/swcye)| AI |
+| Minji Jang <br /> <img src="https://avatars.githubusercontent.com/SUMMERLOVE7" width="100" />  | Republic Of Korea | [Github](https://github.com/SUMMERLOVE7)| AI |
 
 ## Docker Prerequisites
 
