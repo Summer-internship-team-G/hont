@@ -2,7 +2,7 @@
 > **💪HONT : 혼자 + Training**
 > > HONT is a project that counts the number of exercises and provides exercise times, statistics on the day, suitable exercise searches by body part, and guidelines for those who exercise alone.
 
-## 📝 Index
+## 📝Index
 > <b><a href="#system-architecture">System Architecture</a></b>
 >  
 > <b><a href="#development-stack">Development Stack</a></b> 
@@ -19,10 +19,10 @@
 > 
 > <b><a href="#docker-prerequisites">Docker Prerequisites</a></b>  
 
-## ⚙ System Architecture
+## ⚙System Architecture
 ![System Architecture](https://user-images.githubusercontent.com/34560965/127252638-6f905b4c-8282-482e-8e5c-a4b22892d67a.png)
 
-## 🛠 Development Stack
+## 🛠Development Stack
 <p align="center">
   <img src="https://img.shields.io/badge/react-17.0.2-blue" />
   <img src="https://img.shields.io/badge/flask-1.1.1-blue" />
@@ -42,13 +42,13 @@
 </p>
 
 
-## 🎞 Demo Video
+## 🎞Demo Video
 
-## 🖼 Frontend
-### 🎨 Design
+## 🖼Frontend
+### 🎨Design
   > [Design Document](https://www.notion.so/Design-Document-6c5e22d55a614606bd231c488e26e770)    
   
-### 🏠 Structure
+### 🏠Structure
   > [frontend/src/components](./frontend/src/components) : Directory for components   
   > [frontend/src/font](./frontend/src/font) : Directory for font   
   > [frontend/src/images](./frontend/src/images) : Directory for images   
@@ -58,17 +58,17 @@
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## ✨ Backend
+## ✨Backend
 <div align="right">
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## 🤖 AI
+## 🤖AI
 <div align="right">
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## 👩‍👩‍👧‍👧🧑 Contributors
+## 👩‍👩‍👧‍👧🧑Contributors
 | Name | Country | Where to find us | Role |
 | ---- | ------- | ----------------- | ---- |
 | Yejin Kwon <br /> <img src="https://avatars.githubusercontent.com/yejin0928" width="100" />  | Republic Of Korea | [Github](https://github.com/yejin0928)| Backend |
@@ -81,7 +81,7 @@
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## 📌 Docker Prerequisites
+## 📌Docker Prerequisites
 
 -   Windows [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/)
 -   Mac [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
