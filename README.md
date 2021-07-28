@@ -1,61 +1,76 @@
-# 2021 SiliconValley Intership Project
+# 2021 Summer SiliconValley Internship Project
+> **HONT : 혼자 + Training**
+> > HONT is a project that counts the number of exercises and provides exercise times, statistics on the day, suitable exercise searches by body part, and guidelines for those who exercise alone.
+
+## Index
+> <b><a href="#system-architecture">System Architecture</a></b> 
+> <b><a href="#development-stack">Development Stack</a></b> 
+> <b><a href="#demo-video">Demo Video</a></b>  
+> <b><a href="#frontend">Frontend</a></b>  
+> <b><a href="#backend">Backend</a></b>
+> <b><a href="#AI">AI</a></b>  
+> <b><a href="#contributors">Contributors</a></b>   
+> <b><a href="#docker-prerequisites">Docker Prerequisites</a></b>  
 
 ## System Architecture
-![SA](https://user-images.githubusercontent.com/69978041/126726530-4f6e33e9-263f-4ffa-a533-ce96a6e75d45.png)
+![System Architecture](https://user-images.githubusercontent.com/34560965/127252638-6f905b4c-8282-482e-8e5c-a4b22892d67a.png)
 
-## 개발 스택
-JavaScript Framework: React
-
-Web Server: Nginx
-
-WSGI Server: gunicorn
-
-Web Application Framework: Flask
-
-Library for Computer Vision: OpenCV-Python
-
-Database: MongoDB
-
-In-memory cache server: redis
-
-Asynchronous distributed task queuer: Celery
-
-Deployment: Docker
-
-API Documentation Tool: Swagger
-
-Data collecting & searching & visualizing : ELK(elasticsearch, logstash, kibana)
-
-Code Editor: VSCode
+## Development Stack
+<p align="center">
+  <img src="https://img.shields.io/badge/react-17.0.2-blue" />
+  <img src="https://img.shields.io/badge/flask-1.1.1-blue" />
+  <img src="https://img.shields.io/badge/gunicorn-20.0.4-blue" />
+  <img src="https://img.shields.io/badge/OpenCV-4.5.3-blue" />
+  <img src="https://img.shields.io/badge/MongoDB-blue" />
+  <img src="https://img.shields.io/badge/redis-blue" />
+  <img src="https://img.shields.io/badge/Celery-blue" />
+  <img src="https://img.shields.io/badge/Docker-blue" />
+  <img src="https://img.shields.io/badge/Swagger-blue" />
+  <img src="https://img.shields.io/badge/VSCode-blue" />
+</p>
+<p align="center" text-align="center" width="100%">
+  <img src="https://img.shields.io/github/contributors/Summer-internship-team-G/hont" />
+  <img src="https://img.shields.io/github/last-commit/Summer-internship-team-G/hont?color=red" />
+  <img src="https://img.shields.io/github/commit-activity/w/Summer-internship-team-G/hont?color=red" />
+</p>
 
 
+## Demo Video
 
-## 프로젝트 명  
-실시간 영상 기반의 운동 자세 교정(스쿼트, 푸시업) 웹 사이트
-  
-## 팀원
-권예진, 류건열, 김시정, 장민지, 최예은
+## Frontend
 
-## 역할 분담  
-Frontend - 류건열
+## Backend
 
-Backend - 권예진, 김시정
+## AI
 
-Posture correction Algorithm - 최예은, 장민지 
+## Contributors
+| Name | Country | Where to find you | Role |
+| ---- | ------- | ----------------- | ---- |
+| Yejin Kwon <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/yejin0928)| Back End |
+| Sijeong Choi <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/Si-jeong)| Back End |
+| Geonyeol Ryu <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/rjsduf0503)| Front End |
+| Yeeun Choi <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/swcye)| AI |
+| Minji Jang <br /> <img src="" width="100" />  | Republic Of Korea | [Github](https://github.com/SUMMERLOVE7)| AI |
 
+## Docker Prerequisites
 
+-   Windows [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/)
+-   Mac [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
 
-## 기능  
-1. 운동하는 동안 실행한 횟수와 운동 시간을 확인할 수 있다.
+### [](https://github.com/shpark76/docker-demo#1-git-clone)1\. git clone
 
-2. 운동하는 동안 올바른 자세로 운동하도록 텍스트 및 음성으로 안내한다.
+```
+git clone https://github.com/Summer-internship-team-G/hont.git
+```
 
-3. 사용자별로 하루 동안 실행한 운동 횟수와 시간에 대한 통계를 제공한다.
+### [](https://github.com/shpark76/docker-demo#2-docker-compose-build-and-up)2\. docker compose build
 
-## 실행 방법    
-docker-compose up --build
+```
+docker-compose build
+```
 
-## 개발 기간    
-2021.06.28~현재
+### 3\. docker compose up
 
-
+```
+docker-compose up
+```
