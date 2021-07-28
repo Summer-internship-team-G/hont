@@ -18,7 +18,7 @@ class Exercise:
     def updateExercise(self):
         exercise = request.get_json()
 
-        if exercise['exerType'] == "1":
+        if exercise['exerType'] == 1:
             db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squatNum": exercise['exerNum'], "pushupNum": 0, "exerTime": exercise['exerTime']})
         else:
             db.exercises.insert({"id": exercise['id'], "exerDate": exercise['exerDate'], "squatNum": 0, "pushupNum":  exercise['exerNum'], "exerTime": exercise['exerTime']})
