@@ -60,6 +60,18 @@
 </div>
 
 ## ✨Backend
+  > [backend](./backend) : Directory for backend   
+  > [backend/server.py](./backend/server.py) : Main Function   
+  > [backend/user.py](./backend/user.py) : Module for User Management Functions   
+  > [backend/record_exercise.py](./backend/record_exercise.py) : Module for Kinetic Statistical Functions   
+  > [backend/tts.py](./backend/tts.py) : Module for Text-To-Speech Functions   
+  > [backend/search.py](./backend/search.py) : Module for Search Functions   
+  > [backend/Dockerfile](./backend/Dockerfile) : Module for Dockerfile for backend   
+  > [frontend/Dockerfile](./frontend/Dockerfile) : Dockerfile for frontend   
+  > [nginx](./nginx) : Directory for nginx   
+  > [docker-compose.yml](./docker-compose.yml) : Dockerfile Compose for development   
+  > [docker-compose-prod.yml](./docker-compose-prod.yml) : Dockerfile Compose for deployment   
+
 <div align="right">
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
