@@ -65,6 +65,16 @@
 </div>
 
 ## 🤖AI
+### 🏋️Mediapipe ML solution test
+  > [Mediapipe ML solution test](https://www.notion.so/Mediapipe-ML-solution-test-4b08f970dcff40faa20d960bbc6fe161)  
+
+### 🦵Squat 기준
+  > [Squat](https://www.notion.so/Squat-c2e93f74fcad42308a095483e64c071e)  
+
+### 💪Push Up 기준
+  > [Push Up](https://www.notion.so/Push-Up-7b44a151906c4fd08616a288f7695213)  
+
+
 <div align="right">
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
