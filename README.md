@@ -3,25 +3,19 @@
 > > HONT is a project that counts the number of exercises and provides exercise times, statistics on the day, suitable exercise searches by body part, and guidelines for those who exercise alone.
 
 ## 📝 Index
-> <b><a href="#system-architecture">System Architecture</a></b>
->  
-> <b><a href="#development-stack">Development Stack</a></b> 
-> 
+> <b><a href="#system-architecture">System Architecture</a></b>   
+> <b><a href="#development-stack">Development Stack</a></b>   
 > <b><a href="#demo-video">Demo Video</a></b>  
-> 
 > <b><a href="#frontend">Frontend</a></b>  
-> 
 > <b><a href="#backend">Backend</a></b>
-> 
 > <b><a href="#AI">AI</a></b>  
-> 
 > <b><a href="#contributors">Contributors</a></b>   
-> 
 > <b><a href="#docker-prerequisites">Docker Prerequisites</a></b>  
 
 ## ⚙ System Architecture
 ![System Architecture](https://user-images.githubusercontent.com/34560965/127418871-6adb856a-9ef8-4423-9559-0b3ac1999172.png)
 
+<br>
 
 ## 🛠 Development Stack
 <p align="center">
@@ -50,6 +44,11 @@
 https://drive.google.com/file/d/1c3hpz90nAbcNdyMFc3pcbnHZUqi-4n6Z/view?usp=sharing
 ## 🎞 Demo Video
 https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=sharing
+
+<br>
+
+---
+
 ## 🖼 Frontend
 ### 🎨 Design
   > [Design Document](https://www.notion.so/Design-Document-6c5e22d55a614606bd231c488e26e770)    
