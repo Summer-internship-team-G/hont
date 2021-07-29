@@ -1,9 +1,7 @@
-#개발용 compose file
 version: '3.7'
 
-
 services:
-#react container
+
     client:
         build:
             context: ./frontend
@@ -17,82 +15,12 @@ services:
         networks:
             - app-tier
 
-    elasticsearch:
-        build:
-            context: elasticsearch/
-            args:
-                ELK_VERSION: $ELK_VERSION
-        volumes:
-          - type: bind
-            source: ./elasticsearch/config/elasticsearch.yml
-            target: /usr/share/elasticsearch/config/elasticsearch.yml
-            read_only: true
-          - type: volume
-            source: elasticsearch
-            target: /usr/share/elasticsearch/data
-        ports:
-            - "9200:9200"
-            - "9300:9300"
-        environment:
-            ES_JAVA_OPTS: "-Xmx256m -Xms256m"
-            ELASTIC_PASSWORD: changeme
-            # Use single node discovery in order to disable production mode and avoid bootstrap checks.
-            # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
-            discovery.type: single-node
-        networks:
-            - app-tier
-    
-    logstash:
-        build:
-            context: logstash/
-            args:
-                ELK_VERSION: $ELK_VERSION
-        volumes:
-          - type: bind
-            source: ./logstash/config/logstash.yml
-            target: /usr/share/logstash/config/logstash.yml
-            read_only: true
-          - type: bind
-            source: ./logstash/pipeline
-            target: /usr/share/logstash/pipeline
-            read_only: true
-        ports:
-            - "5001:5001/tcp"
-            - "5001:5001/udp"
-            - "9600:9600"
-        environment:
-            LS_JAVA_OPTS: "-Xmx256m -Xms256m"
-        networks:
-            - app-tier
-        depends_on:
-            - elasticsearch
-    
-    kibana:
-        build:
-            context: kibana/
-            args:
-                ELK_VERSION: $ELK_VERSION
-        volumes:
-          - type: bind
-            source: ./kibana/config/kibana.yml
-            target: /usr/share/kibana/config/kibana.yml
-            read_only: true
-        ports:
-            - "5601:5601"
-        networks:
-            - app-tier
-        depends_on:
-            - elasticsearch
-            
-#mongodb container
     mongodb:
         image: mongo
         container_name: mongo
         ports:
             - "27017:27017"
-        expose:
-            - "27017"
-        restart: always
+        restart: unless-stopped
         command: mongod --auth
         environment:
             MONGO_INITDB_ROOT_USERNAME: "admin"
@@ -103,7 +31,7 @@ services:
             - mongodbdata:/data/db
         networks:
             - app-tier
-#flask container
+
     api:
         build: 
             context: ./backend
@@ -119,7 +47,6 @@ services:
             - mongodb
         networks:
             - app-tier
-#nginx container
     nginx:
         image: nginx:latest
         ports:
@@ -132,8 +59,8 @@ services:
             - api
         networks:
             - app-tier
-        restart: "on-failure"  
-#redis container
+        restart: "on-failure"
+        
     redis:
         image: redis:latest
         container_name: redis
@@ -142,12 +69,8 @@ services:
 networks:
     app-tier:
         driver: bridge
-
-
 volumes:
     mongodbdata:
         driver: local
     appdata:
-        driver: local
-    elasticsearch:
         driver: local
