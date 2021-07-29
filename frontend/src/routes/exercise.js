@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import Webcam from "react-webcam";
 import styled from "styled-components";
 
+
 //  start   stop
 //  false   false (초기)
 // --------------------------
@@ -12,12 +13,16 @@ import styled from "styled-components";
 
 const PresentResult = styled.div`
     height: 500px;
+    /* width: 700px; */
+    /* margin-left: 5%;
+    margin-right: 5%; */
     margin-top: 50px;
     margin-bottom: 50px;
     display: flex;
     align-items: center;
     align-content: center;
     flex-flow: row wrap;
+    /* left: 80%; */
 `;
 
 const ExerInfo = styled.div`
@@ -29,6 +34,7 @@ const ExerInfo = styled.div`
     margin-bottom: 10px;
 `;
 
+// function Dosquat({ num, id }) {
 function Dosquat({ num }) {
     const useGetData = () => {
         const webcamRef = useRef(null);
@@ -38,11 +44,13 @@ function Dosquat({ num }) {
         const [ImgSrc, setImgSrc] = useState(null);
         const [guideLine, setGuideLine] = useState("");
         const [count, setCount] = useState(0);
-        
+        const [bcount, setBCount] = useState(0);
+        const [src, setSrc] = useState("");
         const clickStartBtn = (e) => {
             e.preventDefault();
             setStart(true);
         };
+        const [audioSource, setAudioSource] = useState('');
 
         //1초마다 time 증가, frame 변경
         useEffect(() => {
@@ -79,23 +87,66 @@ function Dosquat({ num }) {
             info.append('file', file);
             postData(info);
         },[ImgSrc]);
-    
+        
+        // const getAudioContext = () => {
+        //     // AudioContext = window.AudioContext; /* || window.webkitAudioContext */
+        //     const audioContent = new window.AudioContext();
+        //     return audioContent;
+        // }
+
         //file로 변환된 image를 post하고, 돌아오는 값으로 guideLine과 count setting
         const postData = async (info) => {
             //num == 1 : squat / num == 2 : pushup
             let target = "";
             num == 1 ? target = "analyzeSquat" : target = "analyzePushup";
     
-            await axios.post("http://localhost:5000/api/" + target, info).then((response) => {
+            axios.post("http://localhost:5000/api/" + target, info).then((response) => {
                 if (response.data) {
+
                     setGuideLine(response.data.guide);
-                    setCount(count + response.data.count);
+                    setBCount(count);
+                    setCount(response.data.count);
+                    const countData = {
+                        count:response.data.count
+                    };
+
                 }
                 else {
                     console.log('response 실패');
                 }
+
             });
+            if (bcount>=0&&count>0&&count!=bcount) {
+                const res = await axios.get("http://localhost:5000/textToSpeech/"+count, {
+                    responseType : 'arraybuffer'
+                })
+    
+                console.log("count", count);
+              
+    
+                // const audioContext = getAudioContext();
+                const audioContext = new window.AudioContext();
+                // makeAudio(response)
+                const audioBuffer = await audioContext.decodeAudioData(res.data);
+                
+                //create audio source
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+           
+                // console.log("source : ", source);
+                // setAudioSource(source);
+            }   
+
+            
         }
+
+
+
+
+
+
 
         //stop 버튼을 눌렀을 때 database에 저장하기 위한 post
         const postInfo = async () => {
@@ -133,7 +184,7 @@ function Dosquat({ num }) {
     };
     
     const history = useHistory();
-    const { start, stop, clickStartBtn, clickStopBtn, webcamRef, time, guideLine, count } = useGetData();
+    const { start, stop, clickStartBtn, clickStopBtn, webcamRef, time, guideLine, count, src} = useGetData();
     const videoConstraints = {
         width: 900,
         height: 500,
@@ -151,6 +202,12 @@ function Dosquat({ num }) {
         let today = `${year}년 ${month}월 ${date}일`;
         history.push({
             pathname: "/Result",
+            // search: true,
+            // state: { 
+            //     date: [today],
+            //     time: 1, 
+            //     count: 2, 
+            // }
             state: { 
                 date: today, 
                 time: time, 
@@ -180,8 +237,12 @@ function Dosquat({ num }) {
                         </ExerInfo>
                 </PresentResult>
                 <div className="contents2Item">
+                <audio id="id" controls>
+                <source id="id" type="audio/mp3" src={src} />
+                </audio>
                     <button id="stopBtn" className="lightYellow smallBtn" disabled={stop} onClick={clickStopBtn}>그만하기</button>
                     <button id="quitBtn" className="lightYellow smallBtn" disabled={!stop} onClick={clickQuitBtn}>종료하기</button>
+                   
                 </div>
             </div>
         </>
