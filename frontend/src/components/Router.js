@@ -11,6 +11,7 @@ import Result from '../routes/Result';
 import Login from '../routes/Login';
 import Signup from '../routes/Signup';
 import Statistics from '../routes/Statistics';
+import Searching from '../routes/Searching';
 
 // ()는 or 괄호 없는것 return 자동 / {}는 return 명시를 해줘야함
 // path === link에서 to
@@ -26,6 +27,7 @@ export default () => (
         <Route path='/squat/exercise' exact component={SquatExercise}/>
         <Route path='/Result' exact component={Result}/>
         <Route path='/statistics' exact component={Statistics}/>
+        <Route path='/searching' exact component={Searching}/>
         <Footer/>
     </Router>
 );
