@@ -102,11 +102,11 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
 ## 👩‍👩‍👧‍👧🧑Contributors
 | Name | Country | Where to find us | Role |
 | ---- | ------- | ----------------- | ---- |
-| Yejin Kwon <br /> <img src="https://avatars.githubusercontent.com/yejin0928" width="100" />  | Republic Of Korea | [Github](https://github.com/yejin0928)| Backend |
-| Sijeong Kim <br /> <img src="https://avatars.githubusercontent.com/Si-jeong" width="100" />  | Republic Of Korea | [Github](https://github.com/Si-jeong)| Backend |
-| Geonyeol Ryu <br /> <img src="https://avatars.githubusercontent.com/rjsduf0503" width="100" />  | Republic Of Korea | [Github](https://github.com/rjsduf0503)| Frontend |
-| Yeeun Choi <br /> <img src="https://avatars.githubusercontent.com/swcye" width="100" />  | Republic Of Korea | [Github](https://github.com/swcye)| AI |
-| Minji Jang <br /> <img src="https://avatars.githubusercontent.com/SUMMERLOVE7" width="100" />  | Republic Of Korea | [Github](https://github.com/SUMMERLOVE7)| AI |
+| Yejin Kwon <br /> <img src="https://avatars.githubusercontent.com/yejin0928" width="100" />  | Republic of Korea | [Github](https://github.com/yejin0928)| Backend |
+| Sijeong Kim <br /> <img src="https://avatars.githubusercontent.com/Si-jeong" width="100" />  | Republic of Korea | [Github](https://github.com/Si-jeong)| Backend |
+| Geonyeol Ryu <br /> <img src="https://avatars.githubusercontent.com/rjsduf0503" width="100" />  | Republic of Korea | [Github](https://github.com/rjsduf0503)| Frontend |
+| Yeeun Choi <br /> <img src="https://avatars.githubusercontent.com/swcye" width="100" />  | Republic of Korea | [Github](https://github.com/swcye)| AI |
+| Minji Jang <br /> <img src="https://avatars.githubusercontent.com/SUMMERLOVE7" width="100" />  | Republic of Korea | [Github](https://github.com/SUMMERLOVE7)| AI |
 
 <div align="right">
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
