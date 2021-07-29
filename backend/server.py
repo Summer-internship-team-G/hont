@@ -11,6 +11,7 @@ from record_exercise import Exercise
 from user import User
 from tts import TTS
 import os
+from search import Search
 from celery import Celery
 
 
@@ -75,7 +76,11 @@ class Squat:
 @cross_origin()
 def analyze_squate():
     return Squat().analyze_squat()
+######################## 검색 관련 API ########################
 
+@app.route('/search', methods=['POST'])
+def searchExercise():
+    return Search().findSearch()
 ######################## 운동 관련 API ########################
 
 @app.route('/recordex', methods=['POST'])
