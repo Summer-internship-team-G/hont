@@ -86,6 +86,11 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
 ### 💪Push Up 기준
   > [Push Up](https://www.notion.so/Push-Up-7b44a151906c4fd08616a288f7695213)  
 
+  > [backend/cal_pose.py](./backend/cal_pose.py) : Module for calculate pose  
+  > [backend/cal_pushup.py](./backend/cal_pushup.py) : Module for count pushup and pushup guide  
+  > [backend/cal_squat.py](./backend/cal_squat.py) : Module for count squat and squat guide     
+
+
 
 <div align="right">
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
