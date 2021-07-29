@@ -28,6 +28,8 @@ export default () => {
                     <button className="lightest bigBtn boxShadow" onClick={noSession}>푸시업</button>
                     <button className="neutral bigBtn boxShadow" onClick={noSession}>스쿼트</button>
                     <button className="darkest bigBtn boxShadow" onClick={noSession}>통계</button>
+                    <button className="lightest bigBtn boxShadow" onClick={noSession}>검색</button>
+
                 </>
             }
         </div>
