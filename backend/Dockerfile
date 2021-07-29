@@ -12,6 +12,7 @@ COPY cal_pose.py ./
 COPY cal_squat.py ./
 COPY cal_pushup.py ./
 COPY record_exercise.py ./
+COPY tts.py ./
 COPY user.py ./
 EXPOSE 5000
 
