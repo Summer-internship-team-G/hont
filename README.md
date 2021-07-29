@@ -1,8 +1,8 @@
-# 2021 Summer SilliconValley Internship Project 
-> **💪HONT : 혼자 + Training**
+# 💫 2021 Summer SilliconValley Internship Project 
+> **💪 HONT : 혼자 + Training**
 > > HONT is a project that counts the number of exercises and provides exercise times, statistics on the day, suitable exercise searches by body part, and guidelines for those who exercise alone.
 
-## 📝Index
+## 📝 Index
 > <b><a href="#system-architecture">System Architecture</a></b>
 >  
 > <b><a href="#development-stack">Development Stack</a></b> 
@@ -19,11 +19,11 @@
 > 
 > <b><a href="#docker-prerequisites">Docker Prerequisites</a></b>  
 
-## ⚙System Architecture
+## ⚙ System Architecture
 ![System Architecture](https://user-images.githubusercontent.com/34560965/127418871-6adb856a-9ef8-4423-9559-0b3ac1999172.png)
 
 
-## 🛠Development Stack
+## 🛠 Development Stack
 <p align="center">
   <img src="https://img.shields.io/badge/react-17.0.2-blue" />
   <img src="https://img.shields.io/badge/flask-1.1.1-blue" />
@@ -42,15 +42,15 @@
   <img src="https://img.shields.io/github/commit-activity/w/Summer-internship-team-G/hont?color=red" />
 </p>
 
-## 💎Presentation file
+## 💎 Presentation file
 https://drive.google.com/file/d/1c3hpz90nAbcNdyMFc3pcbnHZUqi-4n6Z/view?usp=sharing
-## 🎞Demo Video
+## 🎞 Demo Video
 https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=sharing
-## 🖼Frontend
-### 🎨Design
+## 🖼 Frontend
+### 🎨 Design
   > [Design Document](https://www.notion.so/Design-Document-6c5e22d55a614606bd231c488e26e770)    
   
-### 🏠Structure
+### 🏠 Structure
   > [frontend/src/components](./frontend/src/components) : Directory for components   
   > [frontend/src/font](./frontend/src/font) : Directory for font   
   > [frontend/src/images](./frontend/src/images) : Directory for images   
@@ -60,8 +60,8 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## ✨Backend
-### 🏠Structure
+## ✨ Backend
+### 🏠 Structure
   > [backend](./backend) : Directory for backend   
   > [backend/server.py](./backend/server.py) : Main module   
   > [backend/user.py](./backend/user.py) : Module for user management functions   
@@ -78,17 +78,17 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## 🤖AI
-### 🏋️Mediapipe ML solution test
+## 🤖 AI
+### 🏋️ Mediapipe ML solution test
   > [Mediapipe ML solution test](https://www.notion.so/Mediapipe-ML-solution-test-4b08f970dcff40faa20d960bbc6fe161)  
 
-### 🦵Squat 기준
+### 🦵 Squat 기준
   > [Squat](https://www.notion.so/Squat-c2e93f74fcad42308a095483e64c071e)  
 
-### 💪Push Up 기준
+### 💪 Push Up 기준
   > [Push Up](https://www.notion.so/Push-Up-7b44a151906c4fd08616a288f7695213) 
 
-### 🏠Structure
+### 🏠 Structure
   > [backend/cal_pose.py](./backend/cal_pose.py) : Module for calculate pose  
   > [backend/cal_pushup.py](./backend/cal_pushup.py) : Module for count pushup and pushup guide  
   > [backend/cal_squat.py](./backend/cal_squat.py) : Module for count squat and squat guide     
@@ -99,7 +99,7 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## 👩‍👩‍👧‍👧🧑Contributors
+## 👩‍👩‍👧‍👧🧑 Contributors
 | Name | Country | Where to find us | Role |
 | ---- | ------- | ----------------- | ---- |
 | Yejin Kwon <br /> <img src="https://avatars.githubusercontent.com/yejin0928" width="100" />  | Republic of Korea | [Github](https://github.com/yejin0928)| Backend |
@@ -112,7 +112,7 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
     <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
-## 📌Docker Prerequisites
+## 📌 Docker Prerequisites
 
 -   Windows [https://docs.docker.com/docker-for-windows/install/](https://docs.docker.com/docker-for-windows/install/)
 -   Mac [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
