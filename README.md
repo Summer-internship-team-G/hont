@@ -61,7 +61,7 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
 
 ## ✨Backend
   > [backend](./backend) : Directory for backend   
-  > [backend/server.py](./backend/server.py) : Main function   
+  > [backend/server.py](./backend/server.py) : Main module   
   > [backend/user.py](./backend/user.py) : Module for user management functions   
   > [backend/record_exercise.py](./backend/record_exercise.py) : Module for kinetic statistical functions   
   > [backend/tts.py](./backend/tts.py) : Module for text-to-speech functions   
