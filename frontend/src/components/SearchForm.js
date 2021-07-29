@@ -15,11 +15,7 @@ display: flex;
 justify-content: center;
 margin-top:70px;   
 `;
-const SearchButton = styled.div`
-display: flex;
-justify-content: center;
-    
-`;
+
 const useStyles = theme => ({
   root: {
     width: 340,
@@ -68,7 +64,6 @@ class SearchForm extends Component {
     const {title, posts} = this.state;
     const postsList = posts.map((post) => (
         <div key={post.id} id={post.id}>
-          
             <Card className={classes.root}>
       <CardActionArea>
         <CardMedia
@@ -87,23 +82,12 @@ class SearchForm extends Component {
           </Typography>
         </CardContent>
       </CardActionArea>
-      {/* <CardActions>
-        <Button size="small" color="primary">
-          Share
-        </Button>
-        <Button size="small" color="primary">
-          Learn More
-        </Button>
-      </CardActions> */}
     </Card>
-
-        </div>
+   </div>
     ));
     const {onChange,onSubmit} = this;
     return (
       <div>
-        
-    
         <form onSubmit={onSubmit}>
           <div>
           <SearchBar>
@@ -112,17 +96,13 @@ class SearchForm extends Component {
             <button type="submit" style={{ border: '5px solid #B0F4E6', width: "5rem", height:"4rem",backgroundColor:"#B0F4E6",
            fontSize: "20px", color:"#FCF9EC"}}><text style={{color:"#12D3CF"}}>찾기</text></button>
             </SearchBar>
-            <SearchButton>
-            
-            </SearchButton>
           </div>
         
           
         </form>
         <Box display="flex" flexWrap="wrap" justifyContent="center" m={10} p={3}>
-       
-                {postsList}
-                </Box>
+        {postsList}
+         </Box>
       </div>
     );
   }
