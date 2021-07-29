@@ -25,19 +25,23 @@
 
 ## 🛠 Development Stack
 <p align="center">
-  <img src="https://img.shields.io/badge/react-17.0.2-blue" />
-  <img src="https://img.shields.io/badge/flask-1.1.1-blue" />
-  <img src="https://img.shields.io/badge/gunicorn-20.0.4-blue" />
-  <img src="https://img.shields.io/badge/OpenCV-4.5.3-blue" />
+  <img src="https://img.shields.io/badge/React-v17.0.2-blue" />
+  <img src="https://img.shields.io/badge/Flask-v1.1.1-blue" />
+  <img src="https://img.shields.io/badge/Gunicorn-v20.0.4-blue" />
+  <img src="https://img.shields.io/badge/Nginx-latest-blue" />
+  <img src="https://img.shields.io/badge/OpenCV-v4.5.3-blue" />
   <img src="https://img.shields.io/badge/MongoDB-blue" />
-  <img src="https://img.shields.io/badge/redis-blue" />
-  <img src="https://img.shields.io/badge/Celery-blue" />
+  <img src="https://img.shields.io/badge/Redis-latest-blue" />
+  <img src="https://img.shields.io/badge/Celery-latest-blue" />
   <img src="https://img.shields.io/badge/Docker-blue" />
   <img src="https://img.shields.io/badge/Swagger-blue" />
+  <img src="https://img.shields.io/badge/Amazon_Polly-blue" />
+
+  <img src="https://img.shields.io/badge/MongoDB_Compass-blue" />
   <img src="https://img.shields.io/badge/VSCode-blue" />
 </p>
 <p align="center" text-align="center" width="100%">
-  <img src="https://img.shields.io/github/contributors/Summer-internship-team-G/hont" />
+  <img src="https://img.shields.io/github/contributors/Summer-internship-team-G/hont?color=brightgreen" />
   <img src="https://img.shields.io/github/last-commit/Summer-internship-team-G/hont?color=red" />
   <img src="https://img.shields.io/github/commit-activity/w/Summer-internship-team-G/hont?color=red" />
 </p>
