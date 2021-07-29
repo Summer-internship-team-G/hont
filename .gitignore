@@ -1,6 +1,11 @@
 
+<<<<<<< Updated upstream
 # Created by https://www.toptal.com/developers/gitignore/api/macos,windows,flask,react,visualstudiocode,opencv,git
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,flask,react,visualstudiocode,opencv,git
+=======
+# Created by https://www.toptal.com/developers/gitignore/api/macos,react,flask,windows,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos,react,flask,windows,visualstudiocode
+>>>>>>> Stashed changes
 
 ### Flask ###
 instance/*
@@ -146,6 +151,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+<<<<<<< Updated upstream
 ### Git ###
 # Created by git for backups. To disable backups in Git:
 # $ git config --global mergetool.keepBackup false
@@ -161,6 +167,8 @@ cython_debug/
 *_LOCAL_*.txt
 *_REMOTE_*.txt
 
+=======
+>>>>>>> Stashed changes
 ### macOS ###
 # General
 .DS_Store
@@ -190,6 +198,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+<<<<<<< Updated upstream
 ### OpenCV ###
 #OpenCV for Mac and Linux
 #build and release folders
@@ -198,6 +207,8 @@ Temporary Items
 */Makefile
 */cmake_install.cmake
 
+=======
+>>>>>>> Stashed changes
 ### react ###
 .DS_*
 logs
@@ -255,4 +266,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+<<<<<<< Updated upstream
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,flask,react,visualstudiocode,opencv,git
+=======
+# End of https://www.toptal.com/developers/gitignore/api/macos,react,flask,windows,visualstudiocode
+>>>>>>> Stashed changes
