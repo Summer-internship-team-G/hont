@@ -20,7 +20,8 @@
 > <b><a href="#docker-prerequisites">Docker Prerequisites</a></b>  
 
 ## ⚙System Architecture
-![System Architecture](https://user-images.githubusercontent.com/34560965/127252638-6f905b4c-8282-482e-8e5c-a4b22892d67a.png)
+![System Architecture](https://user-images.githubusercontent.com/34560965/127418871-6adb856a-9ef8-4423-9559-0b3ac1999172.png)
+
 
 ## 🛠Development Stack
 <p align="center">
