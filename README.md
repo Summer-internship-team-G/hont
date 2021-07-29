@@ -42,7 +42,8 @@
   <img src="https://img.shields.io/github/commit-activity/w/Summer-internship-team-G/hont?color=red" />
 </p>
 
-
+## 💎presentation file
+https://drive.google.com/file/d/1c3hpz90nAbcNdyMFc3pcbnHZUqi-4n6Z/view?usp=sharing
 ## 🎞Demo Video
 https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=sharing
 ## 🖼Frontend
