@@ -66,7 +66,7 @@
   > [backend/record_exercise.py](./backend/record_exercise.py) : Module for Kinetic Statistical Functions   
   > [backend/tts.py](./backend/tts.py) : Module for Text-To-Speech Functions   
   > [backend/search.py](./backend/search.py) : Module for Search Functions   
-  > [backend/Dockerfile](./backend/Dockerfile) : Module for Dockerfile for backend   
+  > [backend/Dockerfile](./backend/Dockerfile) : Dockerfile for backend   
   > [frontend/Dockerfile](./frontend/Dockerfile) : Dockerfile for frontend   
   > [nginx](./nginx) : Directory for nginx   
   > [docker-compose.yml](./docker-compose.yml) : Dockerfile Compose for development   
