@@ -44,7 +44,7 @@
 
 
 ## 🎞Demo Video
-
+https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=sharing
 ## 🖼Frontend
 ### 🎨Design
   > [Design Document](https://www.notion.so/Design-Document-6c5e22d55a614606bd231c488e26e770)    
@@ -61,12 +61,12 @@
 
 ## ✨Backend
   > [backend](./backend) : Directory for backend   
-  > [backend/server.py](./backend/server.py) : Main Function   
-  > [backend/user.py](./backend/user.py) : Module for User Management Functions   
-  > [backend/record_exercise.py](./backend/record_exercise.py) : Module for Kinetic Statistical Functions   
-  > [backend/tts.py](./backend/tts.py) : Module for Text-To-Speech Functions   
-  > [backend/search.py](./backend/search.py) : Module for Search Functions   
-  > [backend/Dockerfile](./backend/Dockerfile) : Module for Dockerfile for backend   
+  > [backend/server.py](./backend/server.py) : Main module   
+  > [backend/user.py](./backend/user.py) : Module for user management functions   
+  > [backend/record_exercise.py](./backend/record_exercise.py) : Module for kinetic statistical functions   
+  > [backend/tts.py](./backend/tts.py) : Module for text-to-speech functions   
+  > [backend/search.py](./backend/search.py) : Module for search functions   
+  > [backend/Dockerfile](./backend/Dockerfile) : Dockerfile for backend   
   > [frontend/Dockerfile](./frontend/Dockerfile) : Dockerfile for frontend   
   > [nginx](./nginx) : Directory for nginx   
   > [docker-compose.yml](./docker-compose.yml) : Dockerfile Compose for development   
