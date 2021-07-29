@@ -1,10 +1,10 @@
 from flask import send_file
 import boto3
-region_name = ''
+region_name = 'ap-northeast-2'
 polly_client = boto3.client(
     'polly',
-    aws_access_key_id = '',
-    aws_secret_access_key = '',
+    aws_access_key_id = 'AKIAU6ECZPVOP6A4VROO',
+    aws_secret_access_key = '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',
     region_name = region_name
 )
 korean = {

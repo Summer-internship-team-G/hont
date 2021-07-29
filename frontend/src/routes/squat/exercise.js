@@ -1,5 +1,5 @@
 import React from "react";
-import Exercise from '../exercise';
+import Exercise from '../../components/exercise';
 
 
 export default () => (

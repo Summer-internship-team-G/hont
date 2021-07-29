@@ -22,6 +22,8 @@ export default () => {
                         <Link to='/pushup/guideLine'><button className="lightest bigBtn boxShadow">푸시업</button></Link>
                         <Link to='/squat/guideLine'><button className="neutral bigBtn boxShadow">스쿼트</button></Link>
                         <Link to='/statistics'><button className="darkest bigBtn boxShadow">통계</button></Link>
+                        <Link to='/searching'><button className="darkest bigBtn boxShadow">검색</button></Link>
+
                     </>
                 :
                 <>
