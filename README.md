@@ -1,4 +1,4 @@
-# 💫 2021 Summer SilliconValley Internship Project 💫
+# 💫 2021 Summer SiliconValley Internship Project 💫
 > **💪 HONT : 혼자 + Training**
 > > HONT is a project that counts the number of exercises and provides exercise times, statistics on the day, suitable exercise searches by body part, and guidelines for those who exercise alone.
 
@@ -58,7 +58,7 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
   > [frontend/src/routes](./frontend/src/routes) : Directory for routes   
 
 <div align="right">
-    <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
+    <b><a href="#2021-Summer-SiliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
 ## ✨ Backend
@@ -76,7 +76,7 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
   > [docker-compose-prod.yml](./docker-compose-prod.yml) : Dockerfile Compose for deployment   
 
 <div align="right">
-    <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
+    <b><a href="#2021-Summer-SiliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
 ## 🤖 AI
@@ -97,7 +97,7 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
 
 
 <div align="right">
-    <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
+    <b><a href="#2021-Summer-SiliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
 ## 👩‍👩‍👧‍👧🧑 Contributors
@@ -110,7 +110,7 @@ https://drive.google.com/file/d/1MzDSEd7gPZIqLVVFc3WQ6Gwguf5WwMRI/view?usp=shari
 | Minji Jang <br /> <img src="https://avatars.githubusercontent.com/SUMMERLOVE7" width="100" />  | Republic of Korea | [Github](https://github.com/SUMMERLOVE7)| AI |
 
 <div align="right">
-    <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
+    <b><a href="#2021-Summer-SiliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
 
 ## 📌 Docker Prerequisites
@@ -137,5 +137,5 @@ docker-compose up
 ```
 
 <div align="right">
-    <b><a href="#2021-Summer-SilliconValley-Internship-Project">⬆️ Back to Top</a></b>
+    <b><a href="#2021-Summer-SiliconValley-Internship-Project">⬆️ Back to Top</a></b>
 </div>
