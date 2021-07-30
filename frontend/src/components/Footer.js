@@ -21,7 +21,7 @@ export default () => {
     return (
         <Footer>
             <Div>권예진 류건열 김시정 장민지 최예은</Div>
-            <Div>SilliconValley Online Internship</Div>
+            <Div>SiliconValley Online Internship</Div>
             <Div>ZoomMate Team. All rights reserved.</Div>
         </Footer>
     )
