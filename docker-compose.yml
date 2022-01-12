@@ -65,6 +65,8 @@ services:
         image: redis:latest
         container_name: redis
         hostname: redis_dev
+        networks:
+            - app-tier
         
 networks:
     app-tier:
